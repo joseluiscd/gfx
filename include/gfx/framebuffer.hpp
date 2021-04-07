@@ -14,6 +14,8 @@ public:
     class Renderbuffer;
 
     Framebuffer();
+    Framebuffer(Framebuffer&& other);
+    Framebuffer& operator=(Framebuffer&& other); 
 
     virtual ~Framebuffer();
 

@@ -40,7 +40,11 @@ Framebuffer::Framebuffer()
     glCreateFramebuffers(1, &impl->id);
 }
 
+Framebuffer::Framebuffer(Framebuffer&& other) = default;
+Framebuffer& Framebuffer::operator=(Framebuffer&& other) = default;
+
 Framebuffer::~Framebuffer()
+
 {
     glDeleteFramebuffers(1, &impl->id);
 }
