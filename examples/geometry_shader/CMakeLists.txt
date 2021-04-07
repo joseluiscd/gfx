@@ -1,0 +1,2 @@
+add_executable(geometry_shader geometry_shader.cpp)
+target_link_libraries(geometry_shader gfx)
