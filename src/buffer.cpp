@@ -33,10 +33,6 @@ RawBuffer::Impl::~Impl()
 void RawBuffer::update_raw_buffer(bool dynamic)
 {
     glNamedBufferData(impl->id, impl->size, impl->buffer, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
-    
-    /*glBindBuffer(GL_ARRAY_BUFFER, impl->id);
-    glBufferData(GL_ARRAY_BUFFER, impl->size, impl->buffer, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 }
 
 void RawBuffer::update_raw_buffer_bytes(const void* buffer, size_t size, bool dynamic)

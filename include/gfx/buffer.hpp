@@ -43,7 +43,7 @@ private:
 
 /// This buffer owns the data
 template <typename T>
-class Buffer : public RawBuffer {
+class Buffer {
 public:
     friend class Editor;
     class Editor {
@@ -93,6 +93,9 @@ public:
     ///Moves data
     void update_buffer(std::vector<T>&& data, bool dynamic = false);
 
+    RawBuffer& get_raw() { return raw_buffer; }
+    const RawBuffer& get_raw() const { return raw_buffer; }
+
     const T& operator[](size_t i) const
     {
         return data[i];
@@ -112,6 +115,7 @@ public:
 
 private:
     std::vector<T> data;
+    RawBuffer raw_buffer;
 
     void update_buffer(bool dynamic = false);
 };
@@ -124,16 +128,16 @@ void RawBuffer::update_raw_buffer(T* buffer, size_t count, bool dynamic)
 
 template <typename T>
 Buffer<T>::Buffer()
-    : RawBuffer()
-    , data()
+    : data()
+    , raw_buffer()
 {
     this->update_buffer();
 }
 
 template <typename T>
 Buffer<T>::Buffer(std::vector<T>&& _data, bool dynamic)
-    : RawBuffer()
-    , data(std::move(_data))
+    : data(std::move(_data))
+    , raw_buffer()
 {
     this->update_buffer(dynamic);
 }
@@ -163,7 +167,7 @@ template <typename T>
 void Buffer<T>::update_buffer(bool dynamic)
 {
     spdlog::info("Data size: {}", data.size());
-    this->update_raw_buffer(data.data(), data.size(), dynamic);
+    raw_buffer.update_raw_buffer(data.data(), data.size(), dynamic);
 }
 
 template <typename T>

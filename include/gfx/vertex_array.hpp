@@ -128,7 +128,7 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, const Buffer<T>& buff
     }
 #endif
     element_count = buffer.size();
-    return add_buffer(layout, (const RawBuffer&)buffer);
+    return add_buffer(layout, buffer.get_raw());
 }
 
 template <typename T>

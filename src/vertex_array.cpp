@@ -167,12 +167,12 @@ VertexArray& VertexArray::set_indices_buffer(uint32_t* data, size_t count)
 
 VertexArray& VertexArray::set_indices_buffer(const Buffer<uint16_t>& data)
 {
-    return set_indices_buffer_16((const RawBuffer&)data, data.size());
+    return set_indices_buffer_16(data.get_raw(), data.size());
 }
 
 VertexArray& VertexArray::set_indices_buffer(const Buffer<uint32_t>& data)
 {
-    return set_indices_buffer_32((const RawBuffer&)data, data.size());
+    return set_indices_buffer_32(data.get_raw(), data.size());
 }
 
 VertexArray& VertexArray::set_mode(Mode _mode)
