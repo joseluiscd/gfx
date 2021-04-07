@@ -7,6 +7,13 @@ namespace gfx {
 
 struct Framebuffer::Impl {
     GLuint id;
+
+    Impl() {
+        glCreateFramebuffers(1, &id);
+    }
+    ~Impl() {
+        glDeleteFramebuffers(1, &id);
+    }
 };
 
 struct Framebuffer::Renderbuffer {
@@ -37,16 +44,13 @@ Framebuffer::Framebuffer()
     , rb_depth_buffer(nullptr)
     , rb_color_buffers()
 {
-    glCreateFramebuffers(1, &impl->id);
 }
 
 Framebuffer::Framebuffer(Framebuffer&& other) = default;
 Framebuffer& Framebuffer::operator=(Framebuffer&& other) = default;
 
 Framebuffer::~Framebuffer()
-
 {
-    glDeleteFramebuffers(1, &impl->id);
 }
 
 Framebuffer& Framebuffer::add_color_buffer(TextureHandle texture)
