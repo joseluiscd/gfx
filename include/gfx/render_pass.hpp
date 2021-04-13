@@ -104,6 +104,11 @@ public:
             f(*this);
             return *this;
         }
+        template <typename Iter, typename Function>
+        RenderPass::Pipeline& for_each(
+            const Iter& begin,
+            const Iter& end,
+            Function function);
 
     private:
         Pipeline(RenderPass& _pass, RenderPipeline& _pipeline)
@@ -149,5 +154,19 @@ inline RenderPass& RenderPass::for_each(
 
     return *this;
 }
+
+template <typename Iter, typename Function>
+inline RenderPass::Pipeline& RenderPass::Pipeline::for_each(
+    const Iter& begin,
+    const Iter& end,
+    Function function)
+{
+    for (Iter it = begin; it != end; ++it) {
+        function(*this, *it);
+    }
+
+    return *this;
+}
+
 
 }
