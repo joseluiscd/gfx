@@ -12,7 +12,6 @@ namespace uniform {
 
         unsigned int ret = next_location;
         next_location += size;
-        spdlog::info("Generating uniform with location {}", ret);
         return ret;
     }
 }

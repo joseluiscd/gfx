@@ -166,7 +166,6 @@ void Buffer<T>::update_buffer(std::vector<T>&& data, bool dynamic)
 template <typename T>
 void Buffer<T>::update_buffer(bool dynamic)
 {
-    spdlog::info("Data size: {}", data.size());
     raw_buffer.update_raw_buffer(data.data(), data.size(), dynamic);
 }
 
