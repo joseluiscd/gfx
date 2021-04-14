@@ -116,7 +116,7 @@ private:
     std::vector<Entry> entries;
     size_t size;
 
-    void apply(const VertexArray& vao, const RawBuffer& buffer) const;
+    void apply(const VertexArray& vao, const RawBuffer& buffer, unsigned index) const;
 };
 
 template <typename T>

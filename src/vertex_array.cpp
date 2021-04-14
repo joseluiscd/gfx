@@ -95,18 +95,24 @@ void VertexArray::draw()
 
 VertexArray& VertexArray::add_buffer(const Layout& layout, const RawBuffer& buffer)
 {
+    layout.apply(*this, buffer, layouts.size());
 
     buffers.push_back(buffer);
     layouts.push_back(layout);
 
-    layout.apply(*this, buffer);
-
     return *this;
 }
 
-void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer) const
+void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer, unsigned buffer_binding) const
 {
     size_t offset = 0;
+
+    glVertexArrayVertexBuffer(
+                vao.impl->id,
+                buffer_binding,
+                buffer.get_id(),
+                offset,
+                this->size);
 
     for (auto it = this->entries.begin(); it != this->entries.end(); ++it) {
         if (it->index >= 0) {
@@ -119,14 +125,7 @@ void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer)
                 GL_FALSE,
                 offset);
 
-            glVertexArrayVertexBuffer(
-                vao.impl->id,
-                it->index,
-                buffer.get_id(),
-                offset,
-                this->size);
-
-            glVertexArrayAttribBinding(vao.impl->id, it->index, 0);
+            glVertexArrayAttribBinding(vao.impl->id, it->index, buffer_binding);
         }
 
         offset += Type_get_size(it->type) * it->count;
