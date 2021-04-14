@@ -126,7 +126,7 @@ void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer)
                 offset,
                 this->size);
 
-            glVertexArrayAttribBinding(vao.impl->id, it->index, 0);
+            glVertexArrayAttribBinding(vao.impl->id, it->index, it->index);
         }
 
         offset += Type_get_size(it->type) * it->count;
