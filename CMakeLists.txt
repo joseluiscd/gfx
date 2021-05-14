@@ -25,7 +25,7 @@ file(GLOB SOURCES src/*.cpp src/*.c src/*.hpp src/imgui/*.cpp src/imgui/*.h src/
 file(GLOB HEADERS include/gfx/*.hpp include/gfx/*.h)
 
 add_library(gfx STATIC ${HEADERS} ${SOURCES})
-target_link_libraries(gfx ${CMAKE_DL_LIBS} glfw glm fmt::fmt spdlog::spdlog Freetype::Freetype)
+target_link_libraries(gfx ${CMAKE_DL_LIBS} glfw glm::glm fmt::fmt spdlog::spdlog Freetype::Freetype)
 target_include_directories(gfx
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
