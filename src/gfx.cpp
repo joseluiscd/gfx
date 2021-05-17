@@ -77,9 +77,15 @@ void Gfx::Impl::keyboard_callback(GLFWwindow* w, int key, int scancode, int acti
     }
 }
 
+void glfw_error_callback(int error, const char* description)
+{
+    spdlog::error("GLFW ({}): {}", error, description);
+}
+
 Gfx::Gfx(const InitOptions& opts)
     : impl(new Gfx::Impl)
 {
+    glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -143,7 +149,6 @@ Gfx::Gfx(const InitOptions& opts)
         glDebugMessageCallback(glDebugOutput, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
-
 }
 
 Gfx::~Gfx()
@@ -297,7 +302,7 @@ void APIENTRY glDebugOutput(GLenum source,
 void setup_imgui_style()
 {
     ImGui::StyleColorsLight();
-    
+
     ImGuiStyle& style = ImGui::GetStyle();
     style.FrameRounding = 4.0f;
     style.WindowRounding = 4.0f;
@@ -319,8 +324,6 @@ void setup_imgui_style()
     io.Fonts->AddFontFromMemoryCompressedBase85TTF(font_awesome_compressed_data_base85, 16.0, &cfg, icons_ranges);
     io.Fonts->AddFontFromMemoryCompressedBase85TTF(font_awesome_2_compressed_data_base85, 16.0, &cfg, icons_ranges);
     io.Fonts->AddFontDefault();
-   
-
 }
 
 } // namespace gfx

@@ -38,36 +38,3 @@ endif()
 
 
 add_subdirectory(examples)
-
-install(
-    TARGETS gfx
-    EXPORT gfxTarget
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBRARYDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBRARYDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-export(
-    EXPORT gfxTarget
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/gfx/gfxTargets.cmake
-)
-
-install(
-    FILES ${HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    COMPONENT devel
-)
-
-install(
-    EXPORT gfxTarget
-    DESTINATION lib/gfx
-    FILE gfxTarget.cmake
-    COMPONENT devel
-)
-
-install(
-    FILES gfxConfig.cmake
-    DESTINATION lib/gfx
-    COMPONENT devel
-)
