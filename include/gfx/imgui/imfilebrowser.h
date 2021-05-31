@@ -1,8 +1,5 @@
 #pragma once
 
-#include <gfx/imgui/imgui.h>
-#include <gfx/font_awesome.hpp>
-#include <algorithm>
 #include <array>
 #include <cstring>
 #include <filesystem>

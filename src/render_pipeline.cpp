@@ -1,4 +1,3 @@
-#include <gfx/glad.h>
 #include <gfx/render_pipeline.hpp>
 #include <spdlog/spdlog.h>
 

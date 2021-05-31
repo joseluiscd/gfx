@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <glm/glm.hpp>
 #include <gfx/bindable.hpp>
 

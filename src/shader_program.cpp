@@ -2,7 +2,6 @@
 #include <fstream>
 #include <gfx/glad.h>
 #include <gfx/shader_program.hpp>
-#include <sstream>
 
 #ifdef GFX_VALIDATION
 #include <spdlog/spdlog.h>

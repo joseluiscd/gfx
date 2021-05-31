@@ -1,22 +1,22 @@
+#include <algorithm>
+#include <exception>
+#include <gfx/font_awesome.hpp>
 #include <gfx/gfx.hpp>
-
-#include <iostream>
-#include <stdio.h>
-
 #include <gfx/glad.h>
 #include <gfx/imgui/imgui.h>
+#include <gfx/render_surface.hpp>
+#include <iostream>
+#include <optional>
+#include <spdlog/spdlog.h>
+#include <stdio.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-
-#include <spdlog/spdlog.h>
-
 #include "private/font_awesome.hpp"
 #include "private/font_lato.hpp"
-#include <gfx/font_awesome.hpp>
 
 namespace gfx {
 

@@ -1,7 +1,6 @@
 #include <gfx/imgui/gfx.hpp>
 #include <gfx/imgui/imgui.h>
 #include <gfx/imgui/imgui_internal.h>
-#include <spdlog/spdlog.h>
 
 struct BlitMultisampleData {
     gfx::Framebuffer* fbo;

@@ -2,12 +2,8 @@
 
 #include <memory>
 #include <vector>
-#include <spdlog/spdlog.h>
 
 namespace gfx {
-
-template <typename T>
-class Buffer;
 
 /// This raw buffer doesn't own the data
 class RawBuffer {

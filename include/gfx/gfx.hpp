@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <gfx/render_pipeline.hpp>
 #include <gfx/render_surface.hpp>
 #include <memory>
 
@@ -46,8 +45,6 @@ public:
 private:
     glm::ivec2 _size;
 };
-
-class DebugRender;
 
 /// Callback has signature `void callback(int key, int action, int mods)`
 using KeyboardCallback = std::function<void(int, int, int)>;

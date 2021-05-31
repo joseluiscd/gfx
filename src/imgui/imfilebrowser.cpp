@@ -1,4 +1,11 @@
 #include <gfx/imgui/imfilebrowser.h>
+#include <algorithm>
+#include <exception>
+#include <iterator>
+#include <string_view>
+#include <utility>
+#include <gfx/font_awesome.hpp>
+#include <gfx/imgui/imgui.h>
 
 ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags flags)
     : width_(700)

@@ -3,6 +3,7 @@
 #include <gfx/bindable.hpp>
 #include <gfx/render_pipeline.hpp>
 #include <gfx/render_surface.hpp>
+#include <optional>
 
 namespace gfx {
 
