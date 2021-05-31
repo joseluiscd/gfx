@@ -2,3 +2,5 @@ BoxGL.pro.user
 build
 build_pi
 .ccls-cache
+.cache
+compile_commands.json
