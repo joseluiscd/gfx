@@ -133,7 +133,7 @@ Gfx::Gfx(const InitOptions& opts)
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-        ImGui_ImplGlfw_Init(window, true);
+        ImGui_ImplGlfw_InitForOther(window, true);
 
         ImGui_ImplOpenGL3_Init();
 
