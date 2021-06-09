@@ -1,3 +1,4 @@
+const char* VS = R"(
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec3 v_color;
@@ -17,3 +18,17 @@ void main()
     i_position = mView * vec4(v_position, 1.0);
     gl_Position = mProj * mView * vec4(v_position, 1.0);
 }
+)";
+
+const char* FS = R"(
+in vec4 i_color;
+in vec4 i_normal;
+in vec4 i_position;
+
+out vec4 f_color;
+
+void main()
+{
+    f_color = max(dot(vec3(0.0, 0.0, 1.0), normalize(vec3(i_normal))), 0.0) * i_color;
+}
+)";

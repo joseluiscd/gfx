@@ -1,4 +1,5 @@
 #include "scene.hpp"
+#include "shaders.h"
 #include <gfx/imgui/gfx.hpp>
 #include <gfx/glad.h>
 #include <gfx/render_pass.hpp>
@@ -33,8 +34,8 @@ Scene::Scene()
               .with_shader(gfx::ShaderProgram::Builder()
                                .register_class<gfx::CameraLens>()
                                .register_class<gfx::CameraRig>()
-                               .with_vertex_shader_file("scene.vs")
-                               .with_fragment_shader_file("scene.fs")
+                               .with_vertex_shader(VS)
+                               .with_fragment_shader(FS)
                                .build())
               .build_unique();
 

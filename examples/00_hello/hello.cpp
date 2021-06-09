@@ -7,6 +7,30 @@
 #include <gfx/render_pass.hpp>
 #include <spdlog/spdlog.h>
 
+const static char* VS = R"(
+layout (location = 0) in vec2 v_position;
+layout (location = 1) in vec3 v_color;
+
+out vec3 i_color;
+
+void main()
+{
+    gl_Position = vec4(v_position, 0.0, 1.0);
+    i_color = v_color;
+}
+)";
+
+const static char* FS = R"(
+in vec3 i_color;
+
+out vec4 f_color;
+
+void main()
+{
+    f_color = vec4(i_color, 1.0);
+}
+)";
+
 enum Attrib : unsigned int {
     Position = 0,
     Color = 1,
@@ -46,8 +70,8 @@ int main()
 
     gfx::RenderPipeline pipeline = gfx::RenderPipeline::Builder("example")
                                        .with_shader(gfx::ShaderProgram::Builder("example")
-                                                        .with_vertex_shader_file("example.vs")
-                                                        .with_fragment_shader_file("example.fs")
+                                                        .with_vertex_shader(VS)
+                                                        .with_fragment_shader(FS)
                                                         .build())
                                        .build();
 

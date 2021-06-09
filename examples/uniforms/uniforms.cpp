@@ -32,6 +32,42 @@ const gfx::VertexArray::Layout Vertex::layout = {
     { Attrib::Color, 3, gfx::Type::Float },
 };
 
+const char* VS = R"(
+layout (location = kPosition) in vec3 v_position;
+layout (location = kNormal) in vec3 v_normal;
+layout (location = kColor) in vec3 v_color;
+
+
+layout (location = kProjectionMatrix) uniform mat4 mProj;
+layout (location = kModelMatrix) uniform mat4 mModel;
+layout (location = kViewMatrix) uniform mat4 mView;
+
+out vec4 i_color;
+out vec4 i_normal;
+out vec4 i_position;
+
+void main()
+{
+    i_normal = mView * mModel * vec4(v_normal, 0.0);
+    i_color = vec4(v_color, 1.0);
+    i_position = mView * mModel * vec4(v_position, 1.0);
+    gl_Position = mProj * mView * mModel * vec4(v_position, 1.0);
+}
+)";
+
+const char* FS = R"(
+in vec4 i_color;
+in vec4 i_normal;
+in vec4 i_position;
+
+out vec4 f_color;
+
+void main()
+{
+    f_color = max(dot(vec3(0.0, 0.0, 1.0), normalize(vec3(i_normal))), 0.0) * i_color;
+}
+)";
+
 class Object : public gfx::IBindable<Object>, public gfx::IDrawable<Object> {
 public:
     struct ModelMatrix : public gfx::UniformSemantics {
@@ -157,8 +193,8 @@ int main()
                                                         .with_constant("kPosition", Attrib::Position)
                                                         .with_constant("kNormal", Attrib::Normal)
                                                         .with_constant("kColor", Attrib::Color)
-                                                        .with_vertex_shader_file("example.vs")
-                                                        .with_fragment_shader_file("example.fs")
+                                                        .with_vertex_shader(VS)
+                                                        .with_fragment_shader(FS)
                                                         .build())
                                        .build();
 
