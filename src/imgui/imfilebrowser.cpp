@@ -78,8 +78,8 @@ void ImGui::FileBrowser::SetWindowSize(int width, int height) noexcept
 void ImGui::FileBrowser::SetTitle(std::string title)
 {
     title_ = std::move(title);
-    openLabel_ = title_ + "##filebrowser_" + std::to_string(reinterpret_cast<size_t>(this));
-    openNewDirLabel_ = "new dir##new_dir_" + std::to_string(reinterpret_cast<size_t>(this));
+    openLabel_ = title_;
+    openNewDirLabel_ = "new dir";
 }
 
 void ImGui::FileBrowser::Open()
