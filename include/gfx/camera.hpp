@@ -159,6 +159,7 @@ public:
     void dolly(float distance);
     void truck(float distance);
     void crane(float distance);
+    void vertical(float distance);
     void orbit(float angle);
     void orbit_vertical(float angle);
 
