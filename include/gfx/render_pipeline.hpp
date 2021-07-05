@@ -29,6 +29,7 @@ public:
     virtual glm::mat4 get_matrix() = 0;
 };
 
+/// For using in an attribute, use AbstractCamera instead (has no template argument).
 template <typename CameraImpl>
 class DynamicCamera : public AbstractCamera, public ICamera<CameraImpl> {
 public:
@@ -58,6 +59,7 @@ public:
     virtual void draw() = 0;
 };
 
+/// For using in an attribute, use AbstractDrawable instead (has no template argument).
 template <typename Drawable>
 class DynamicDrawable : public AbstractDrawable, public IDrawable<Drawable> {
 public:
