@@ -160,6 +160,7 @@ public:
     void truck(float distance);
     void crane(float distance);
     void vertical(float distance);
+    void advance(float distance);
     void orbit(float angle);
     void orbit_vertical(float angle);
 

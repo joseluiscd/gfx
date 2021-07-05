@@ -69,6 +69,13 @@ void CameraRig::vertical(float distance)
     update_matrix();
 }
 
+void CameraRig::advance(float distance)
+{
+    glm::mat4 transform = glm::translate(-distance * n);
+    this->v_position = glm::vec3(transform * glm::vec4(this->v_position, 1.0));
+    update_matrix();
+}
+
 void CameraRig::orbit(float angle)
 {
     glm::mat4 transform = glm::translate(v_lookat)
