@@ -46,11 +46,11 @@ bool BeginFramebuffer(
 
     if (! (ImGui::GetIO().KeyMods & ImGuiKeyModFlags_Alt)) {
         ImGui::InvisibleButton("3D Window", size,
-            ImGuiMouseButton_Right
-                | ImGuiMouseButton_Left
-                | ImGuiMouseButton_Middle);
+            ImGuiButtonFlags_MouseButtonRight
+                | ImGuiButtonFlags_MouseButtonLeft
+                | ImGuiButtonFlags_MouseButtonMiddle);
     } else {
-        ImGui::Text("");
+        ImGui::InvisibleButton("3D Window", size, ImGuiButtonFlags_Disabled);
     }
 
     return true;
