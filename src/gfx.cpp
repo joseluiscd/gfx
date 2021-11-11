@@ -168,21 +168,25 @@ void Gfx::draw_gui(RenderSurface& rs)
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Gfx::main_loop(std::function<void()> render_frame)
+
+bool Gfx::should_close()
 {
-    while (!glfwWindowShouldClose(impl->window)) {
-        glfwPollEvents();
+    return glfwWindowShouldClose(impl->window);
+}
 
-        if (impl->imgui_inited) {
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-        }
+void Gfx::step(std::function<void()> render_frame)
+{
+    glfwPollEvents();
 
-        render_frame();
-
-        glfwSwapBuffers(impl->window);
+    if (impl->imgui_inited) {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
     }
+
+    render_frame();
+
+    glfwSwapBuffers(impl->window);
 }
 
 void WindowRenderSurface::bind()

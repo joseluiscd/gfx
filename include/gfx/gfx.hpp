@@ -68,7 +68,16 @@ public:
     }
 
     void render();
-    void main_loop(std::function<void()> render_frame);
+    bool should_close();
+    void step(std::function<void()> render_frame);
+
+    template <typename RenderFunc>
+    void main_loop(RenderFunc&& render_frame)
+    {
+        while (!should_close()) {
+            step(render_frame);
+        }
+    }
 
     void set_keyboard_callback(KeyboardCallback callback);
     void set_mouse_move_callback(MouseMoveCallback callback);
