@@ -3,30 +3,6 @@
 
 namespace gfx {
 
-size_t Type_get_size(Type t)
-{
-    switch (t) {
-    case Type::Byte:
-        return 1;
-    case Type::Float:
-        return sizeof(float);
-    case Type::Double:
-        return sizeof(double);
-    case Type::UnsignedByte:
-        return 1;
-    case Type::Int16:
-        return sizeof(int16_t);
-    case Type::Int32:
-        return sizeof(int32_t);
-    case Type::Unsigned16:
-        return sizeof(uint16_t);
-    case Type::Unsigned32:
-        return sizeof(uint32_t);
-    default:
-        return 0;
-    }
-}
-
 GLuint Type_get_GL(Type t)
 {
     switch (t) {
@@ -105,16 +81,26 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, const RawBuffer& buff
 
 void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer, unsigned buffer_binding) const
 {
+#ifdef GFX_VALIDATION
+    {
+        GLint _i;
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &_i);
+        GFX_ASSERT(_i >= count,
+            "The number of attributes that OpenGL supports is less than the provided in the layout.\n"
+            "OpenGL supports %d in this machine. %zu provided.", _i, count);
+    }
+#endif
     size_t offset = 0;
 
     glVertexArrayVertexBuffer(
-                vao.impl->id,
-                buffer_binding,
-                buffer.get_id(),
-                offset,
-                this->size);
+        vao.impl->id,
+        buffer_binding,
+        buffer.get_id(),
+        offset,
+        this->size);
 
-    for (auto it = this->entries.begin(); it != this->entries.end(); ++it) {
+    for (size_t i = 0; i < count; i++) {
+        const Entry* it = &entries[i];
         if (it->index >= 0) {
             glEnableVertexArrayAttrib(vao.impl->id, it->index);
             glVertexArrayAttribFormat(

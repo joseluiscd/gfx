@@ -1,10 +1,8 @@
-#define GFX_VALIDATION
-
 #include <gfx/gfx.hpp>
 #include <gfx/glad.h>
+#include <gfx/render_pass.hpp>
 #include <gfx/render_pipeline.hpp>
 #include <gfx/vertex_array.hpp>
-#include <gfx/render_pass.hpp>
 
 const static char* VS = R"(
 layout (location = 0) in vec2 v_position;
@@ -39,12 +37,10 @@ struct Vertex {
     glm::vec2 position;
     glm::vec3 color;
 
-    static const gfx::VertexArray::Layout layout;
-};
-
-const gfx::VertexArray::Layout Vertex::layout = {
-    { Attrib::Position, 2, gfx::Type::Float },
-    { Attrib::Color, 3, gfx::Type::Float },
+    static constexpr const gfx::VertexArray::Layout layout = {
+        { Attrib::Position, 2, gfx::Type::Float },
+        { Attrib::Color, 3, gfx::Type::Float },
+    };
 };
 
 int main()
@@ -63,7 +59,7 @@ int main()
 
     gfx::VertexArray triangle;
     triangle
-        .add_buffer(Vertex::layout, vertices.data(), vertices.size())
+        .add_buffer(vertices.data(), vertices.size())
         .set_indices_buffer(indices, 3)
         .set_mode(gfx::Mode::Triangles);
 
@@ -78,7 +74,6 @@ int main()
         gfx::RenderPass(app.get_surface(), gfx::ClearOperation::color())
             .set_pipeline(pipeline)
             .draw(triangle);
-        
     });
 
     return 0;
