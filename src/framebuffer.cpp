@@ -1,7 +1,7 @@
 #include "private/pixel_storage.hpp"
 #include <gfx/framebuffer.hpp>
 #include <gfx/glad.h>
-#include <spdlog/spdlog.h>
+#include <gfx/log.hpp>
 
 namespace gfx {
 
@@ -113,15 +113,7 @@ void Framebuffer::bind()
     glBindFramebuffer(GL_FRAMEBUFFER, impl->id);
     glViewport(0, 0, _size.x, _size.y);
 
-#ifdef GFX_VALIDATION
-    static bool checked = false;
-    if (!checked) {
-        checked = true;
-        if (glCheckNamedFramebufferStatus(impl->id, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            spdlog::error("Framebuffer is iscomplete");
-        }
-    }
-#endif
+    GFX_ASSERT(glCheckNamedFramebufferStatus(impl->id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete");
 }
 
 void Framebuffer::blit_colors(

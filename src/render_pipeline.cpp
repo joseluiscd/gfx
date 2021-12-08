@@ -1,17 +1,12 @@
 #include <gfx/render_pipeline.hpp>
-#include <spdlog/spdlog.h>
+#include <gfx/log.hpp>
 
 namespace gfx {
 
 
 RenderPipeline RenderPipeline::Builder::build()
 {
-#ifdef GFX_VALIDATION
-    if (shader.get() == nullptr) {
-        spdlog::error("Creating pipeline {} without specifying shader program", label);
-    }
-#endif
-
+    GFX_ASSERT(shader.get() != nullptr, "Creating pipeline %s without specifying shader program", label.c_str());
     return RenderPipeline { label, shader, culling, blending };
 }
 

@@ -1,6 +1,5 @@
 #include <gfx/buffer.hpp>
 #include <gfx/glad.h>
-#include <spdlog/spdlog.h>
 
 namespace gfx {
 

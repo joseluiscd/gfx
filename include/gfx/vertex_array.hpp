@@ -2,15 +2,12 @@
 
 #include <algorithm>
 #include <gfx/buffer.hpp>
+#include <gfx/log.hpp>
 #include <gfx/render_pipeline.hpp>
 #include <initializer_list>
 #include <memory>
 #include <optional>
 #include <vector>
-
-#ifdef GFX_VALIDATION
-#include <spdlog/spdlog.h>
-#endif
 
 namespace gfx {
 
@@ -122,11 +119,7 @@ private:
 template <typename T>
 VertexArray& VertexArray::add_buffer(const Layout& layout, const Buffer<T>& buffer)
 {
-#ifdef GFX_VALIDATION
-    if (sizeof(T) != layout.size) {
-        spdlog::error("Layout size must match array type size");
-    }
-#endif
+    GFX_ASSERT(sizeof(T) == layout.size, "Layout size must match array type size. Found %zu and %zu", sizeof(T), layout.size);
     element_count = buffer.size();
     return add_buffer(layout, buffer.get_raw());
 }
@@ -134,11 +127,7 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, const Buffer<T>& buff
 template <typename T>
 VertexArray& VertexArray::add_buffer(const Layout& layout, T* data, size_t count)
 {
-#ifdef GFX_VALIDATION
-    if (sizeof(T) != layout.size) {
-        spdlog::error("Layout size must match array type size");
-    }
-#endif
+    GFX_ASSERT(sizeof(T) == layout.size, "Layout size must match array type size. Found %zu and %zu", sizeof(T), layout.size);
     element_count = count;
     return add_buffer(layout, RawBuffer(data, count * sizeof(T)));
 }

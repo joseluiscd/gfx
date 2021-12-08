@@ -1,11 +1,8 @@
 #include <fmt/format.h>
 #include <fstream>
 #include <gfx/glad.h>
+#include <gfx/log.hpp>
 #include <gfx/shader_program.hpp>
-
-#ifdef GFX_VALIDATION
-#include <spdlog/spdlog.h>
-#endif
 
 namespace gfx {
 
@@ -170,12 +167,7 @@ ShaderProgram::~ShaderProgram()
 
 void ShaderProgram::use()
 {
-#ifdef GFX_VALIDATION
-    if (this->impl->handle == 0) {
-        spdlog::error("Using an invalid ShaderProgram");
-    }
-#endif
-
+    GFX_ASSERT(this->impl->handle != 0, "Using an invalid ShaderProgram");
     glUseProgram(this->impl->handle);
 }
 
@@ -185,7 +177,7 @@ std::string read_shader_file(const char* path)
     std::ifstream source_file;
     source_file.open(path);
     if (!source_file) {
-        spdlog::error("Cannot open shader source file: \"{}\"", path);
+        GFX_ERROR("Cannot open shader source file: \"%s\"", path);
         return "";
     }
 
@@ -201,7 +193,7 @@ std::string read_shader_file(const char* path)
 inline void _validate_shader(GLuint handle, const char* shader_type, const char* name)
 {
     if (handle == 0) {
-        spdlog::error("Error, invalid shader");
+        GFX_ERROR("Error, invalid shader");
     }
 
     GLint compileResult;
@@ -215,12 +207,12 @@ inline void _validate_shader(GLuint handle, const char* shader_type, const char*
             GLint written = 0;
             glGetShaderInfoLog(handle, logLen, &written, log_string);
 
-            spdlog::error("Error compiling {} shader \"{}\":\n{}", shader_type, name, log_string);
+            GFX_ERROR("Error compiling %s shader \"%s\":%s{}", shader_type, name, log_string);
 
             delete[] log_string;
 
         } else {
-            spdlog::error("Could not compile {} shader \"{}\"", shader_type, name);
+            GFX_ERROR("Could not compile %s shader \"%s\"", shader_type, name);
         }
     }
 }
@@ -236,10 +228,10 @@ inline void _validate_program(GLuint handle, const char* name)
             char* log_string = new char[logLen];
             GLint written = 0;
             glGetProgramInfoLog(handle, logLen, &written, log_string);
-            spdlog::error("Error linking shader program \"{}\":\n{}", name, log_string);
+            GFX_ERROR("Error linking shader program \"%s\":\n%s", name, log_string);
             delete[] log_string;
         } else {
-            spdlog::error("Could not link shader program \"{}\"", name);
+            GFX_ERROR("Could not link shader program \"%s\"", name);
         }
     }
 }

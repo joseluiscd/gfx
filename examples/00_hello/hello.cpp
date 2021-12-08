@@ -5,7 +5,6 @@
 #include <gfx/render_pipeline.hpp>
 #include <gfx/vertex_array.hpp>
 #include <gfx/render_pass.hpp>
-#include <spdlog/spdlog.h>
 
 const static char* VS = R"(
 layout (location = 0) in vec2 v_position;

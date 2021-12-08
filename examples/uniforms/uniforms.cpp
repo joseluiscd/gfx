@@ -3,14 +3,13 @@
 #include <gfx/camera.hpp>
 #include <gfx/gfx.hpp>
 #include <gfx/glad.h>
+#include <gfx/render_pass.hpp>
 #include <gfx/render_pipeline.hpp>
 #include <gfx/uniform.hpp>
 #include <gfx/vertex_array.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
-#include <spdlog/spdlog.h>
-#include <gfx/render_pass.hpp>
 
 enum Attrib : unsigned int {
     Position = 0,
@@ -183,8 +182,6 @@ int main()
         .title = "Hello world",
         .resizable = true });
 
-    spdlog::info("{}  - {}", Vertex::layout.get_size(), sizeof(Vertex));
-
     gfx::RenderPipeline pipeline = gfx::RenderPipeline::Builder("example")
                                        .with_shader(gfx::ShaderProgram::Builder("example")
                                                         .register_uniform<Object::ModelMatrix>()
@@ -212,7 +209,7 @@ int main()
     app.main_loop([&]() {
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        gfx::RenderPass(app.get_surface(), gfx::ClearOperation::color_and_depth({0.3, 0.3, 0.3, 1.0}))
+        gfx::RenderPass(app.get_surface(), gfx::ClearOperation::color_and_depth({ 0.3, 0.3, 0.3, 1.0 }))
             .set_pipeline(pipeline)
             .with_camera(cam)
             .bind(obj)

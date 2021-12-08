@@ -4,7 +4,6 @@
 #include <gfx/glad.h>
 #include <gfx/render_pipeline.hpp>
 #include <gfx/vertex_array.hpp>
-#include <spdlog/spdlog.h>
 #include <gfx/render_pass.hpp>
 
 enum Attrib : unsigned int {

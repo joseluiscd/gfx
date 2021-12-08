@@ -4,10 +4,10 @@
 #include <gfx/gfx.hpp>
 #include <gfx/glad.h>
 #include <gfx/imgui/imgui.h>
+#include <gfx/log.hpp>
 #include <gfx/render_surface.hpp>
 #include <iostream>
 #include <optional>
-#include <spdlog/spdlog.h>
 #include <stdio.h>
 
 #define GLFW_INCLUDE_NONE
@@ -79,7 +79,7 @@ void Gfx::Impl::keyboard_callback(GLFWwindow* w, int key, int scancode, int acti
 
 void glfw_error_callback(int error, const char* description)
 {
-    spdlog::error("GLFW ({}): {}", error, description);
+    std::printf("GLFW ERROR: %d, %s", error, description);
 }
 
 Gfx::Gfx(const InitOptions& opts)
@@ -118,10 +118,10 @@ Gfx::Gfx(const InitOptions& opts)
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
     //glfwSwapInterval(1);
-    spdlog::info("Open GL version: {}", glGetString(GL_VERSION));
-    spdlog::info("GLSL version: {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
-    spdlog::info("Vendor: {}", glGetString(GL_VENDOR));
-    spdlog::info("Renderer: {}", glGetString(GL_RENDERER));
+    GFX_INFO("Open GL version: %s", glGetString(GL_VERSION));
+    GFX_INFO("GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+    GFX_INFO("Vendor: %s", glGetString(GL_VENDOR));
+    GFX_INFO("Renderer: %s", glGetString(GL_RENDERER));
 
     glfwSetWindowSizeCallback(window, Impl::resize_callback);
     glfwSetMouseButtonCallback(window, Impl::mouse_button_callback);
@@ -167,7 +167,6 @@ void Gfx::draw_gui(RenderSurface& rs)
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
-
 
 bool Gfx::should_close()
 {
