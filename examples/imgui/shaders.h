@@ -3,8 +3,8 @@ layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec3 v_color;
 
-layout uniform mat4 mProj;
-layout uniform mat4 mView;
+uniform mat4 mProj;
+uniform mat4 mView;
 
 out vec4 i_color;
 out vec4 i_normal;
