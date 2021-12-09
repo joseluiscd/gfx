@@ -5,8 +5,8 @@
 #include <gfx/vertex_array.hpp>
 
 const static char* VS = R"(
-layout (location = 0) in vec2 v_position;
-layout (location = 1) in vec3 v_color;
+layout (location = kPosition) in vec2 v_position;
+layout (location = kColor) in vec3 v_color;
 
 out vec3 i_color;
 
@@ -30,17 +30,17 @@ void main()
 
 enum Attrib : unsigned int {
     Position = 0,
-    Color = 1,
+    Color,
 };
 
 struct Vertex {
     glm::vec2 position;
     glm::vec3 color;
 
-    static constexpr const gfx::VertexArray::Layout layout = {
+    GFX_VERTEX_LAYOUT(
         { Attrib::Position, 2, gfx::Type::Float },
         { Attrib::Color, 3, gfx::Type::Float },
-    };
+    );
 };
 
 int main()
@@ -65,6 +65,8 @@ int main()
 
     gfx::RenderPipeline pipeline = gfx::RenderPipeline::Builder("example")
                                        .with_shader(gfx::ShaderProgram::Builder("example")
+                                                        .with_constant("kPosition", Attrib::Position)
+                                                        .with_constant("kColor", Attrib::Color)
                                                         .with_vertex_shader(VS)
                                                         .with_fragment_shader(FS)
                                                         .build())

@@ -43,10 +43,10 @@ public:
     template <typename T>
     VertexArray& add_buffer(const Layout& layout, T* data, size_t count);
 
-    template <typename T, typename = decltype(T::layout)>
+    template <typename T, typename = decltype(T::__gfx_layout)>
     VertexArray& add_buffer(const Buffer<T>& buffer);
 
-    template <typename T, typename = decltype(T::layout)>
+    template <typename T, typename = decltype(T::__gfx_layout)>
     VertexArray& add_buffer(T* data, size_t count);
 
     VertexArray& add_buffer(const Layout& layout, const RawBuffer& buffer);
@@ -65,7 +65,7 @@ public:
         return *this;
     }
 
-    void draw(); //override
+    void draw(); // override
 
 private:
     std::vector<Layout> layouts;
@@ -78,7 +78,7 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-enum class Type {
+enum Type : size_t {
     Byte,
     Float,
     Double,
@@ -89,30 +89,18 @@ enum class Type {
     Unsigned32,
 };
 
-//TODO: Change this function to an array
-constexpr size_t Type_get_size(Type t)
-{
-    switch (t) {
-    case Type::Byte:
-        return 1;
-    case Type::Float:
-        return sizeof(float);
-    case Type::Double:
-        return sizeof(double);
-    case Type::UnsignedByte:
-        return 1;
-    case Type::Int16:
-        return sizeof(int16_t);
-    case Type::Int32:
-        return sizeof(int32_t);
-    case Type::Unsigned16:
-        return sizeof(uint16_t);
-    case Type::Unsigned32:
-        return sizeof(uint32_t);
-    default:
-        return 0;
-    }
-}
+constexpr const size_t Type_size[] = {
+    sizeof(std::byte), // Byte
+    sizeof(float), // Float
+    sizeof(double), // Double
+    sizeof(std::int16_t), // Int16
+    sizeof(std::int32_t), // Int32
+    sizeof(std::byte), // UnsignedByte
+    sizeof(std::uint16_t), // Unsigned16
+    sizeof(std::uint32_t), // Unsigned32
+};
+
+#define GFX_VERTEX_LAYOUT(...) static constexpr const ::gfx::VertexArray::Layout __gfx_layout = { __VA_ARGS__ };
 
 /// Specifies layout of a Vertex Attribute Object
 class VertexArray::Layout {
@@ -145,7 +133,7 @@ public:
         size_t i = 0;
         for (auto it = v.begin(); it != v.end(); ++it) {
             entries[i++] = *it;
-            size += it->count * Type_get_size(it->type);
+            size += it->count * Type_size[it->type];
         }
     }
 
@@ -159,11 +147,10 @@ private:
     void apply(const VertexArray& vao, const RawBuffer& buffer, unsigned index) const;
 };
 
-//TODO: Declare attribs in a DSL fashion
+// TODO: Declare attribs in a DSL fashion
 template <typename Type>
 VertexArray::Layout::Entry attrib(int index)
 {
-
 }
 
 template <typename T>
@@ -185,18 +172,16 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, T* data, size_t count
 template <typename T, typename>
 inline VertexArray& VertexArray::add_buffer(const Buffer<T>& buffer)
 {
-    static_assert(std::is_same_v<std::remove_const_t<decltype(T::layout)>, VertexArray::Layout>,
-        "To use this method signature, the vertex type must define its layout"
-    );
-    return add_buffer(T::layout, buffer);
+    static_assert(std::is_same_v<std::remove_const_t<decltype(T::__gfx_layout)>, VertexArray::Layout>,
+        "To use this method signature, the vertex type must define its layout");
+    return add_buffer(T::__gfx_layout, buffer);
 }
 
 template <typename T, typename>
 inline VertexArray& VertexArray::add_buffer(T* data, size_t count)
 {
-    static_assert(std::is_same_v<std::remove_const_t<decltype(T::layout)>, VertexArray::Layout>,
-        "To use this method signature, the vertex type must define its layout"
-    );
-    return add_buffer(T::layout, data, count);
+    static_assert(std::is_same_v<std::remove_const_t<decltype(T::__gfx_layout)>, VertexArray::Layout>,
+        "To use this method signature, the vertex type must define its layout");
+    return add_buffer(T::__gfx_layout, data, count);
 }
 }
