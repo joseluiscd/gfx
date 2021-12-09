@@ -5,7 +5,7 @@ namespace gfx {
 
 namespace uniform {
     // Not thread-safe
-    UniformID generate_location(unsigned int size)
+    UniformID generate_id(unsigned int size)
     {
         static UniformID next_location = 0;
 

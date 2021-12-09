@@ -5,15 +5,14 @@
 
 namespace gfx {
 
-#define DEF_UNIFORM_SEMANTICS(CLS, TYPE, LOC)           \
+#define GFX_UNIFORM_SEMANTICS(CLS, TYPE)           \
     struct CLS : public gfx::UniformSemantics {         \
         using type = TYPE;                              \
-        static constexpr const char* location = (LOC); \
     };
 
 namespace uniform {
     /// This is not thread-safe
-    UniformID generate_location(unsigned int size = 1);
+    UniformID generate_id(unsigned int size = 1);
 }
 
 /// A type that can be uploaded to the GPU as a uniform (glm::vec3)
@@ -77,7 +76,7 @@ private:
 
 template <typename Semantics>
 const UniformID Uniform<Semantics>::uniform_id = []() {
-    return gfx::uniform::generate_location(UniformType<typename Semantics::type>::n_locations);
+    return gfx::uniform::generate_id(UniformType<typename Semantics::type>::n_locations);
 }();
 
 namespace uniform::detail {

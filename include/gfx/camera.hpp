@@ -98,7 +98,6 @@ class CameraRig : public ICamera<CameraRig> {
 public:
     struct ViewMatrix : public UniformSemantics {
         using type = glm::mat4;
-        static constexpr const char* location = "kViewMatrix";
     };
 
     CameraRig(CameraLens& __lens)
