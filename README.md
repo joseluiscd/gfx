@@ -18,7 +18,6 @@ GFX requires at least:
 - glfw 3.3
 - glm 0.9
 - fmtlib 7.0
-- spdlog 1.8
 - Freetype 2.10
 
 ## Usage
@@ -60,4 +59,4 @@ Some tasks to improve the library:
 
 - Camera refactor (different `gfx::CameraRig` controls)
 - Make vertex attribute creation similar to uniforms
-- Make some libraries optional (fmtlib, spdlog, freetype)
+- Make some libraries optional (freetype)
