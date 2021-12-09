@@ -1,11 +1,10 @@
-const char* VS = R"(
+static const char* VS = R"(
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec3 v_color;
 
-
-layout (location = kProjectionMatrix) uniform mat4 mProj;
-layout (location = kViewMatrix) uniform mat4 mView;
+layout uniform mat4 mProj;
+layout uniform mat4 mView;
 
 out vec4 i_color;
 out vec4 i_normal;
@@ -20,7 +19,10 @@ void main()
 }
 )";
 
-const char* FS = R"(
+static const char* VS_mProj = "mProj";
+static const char* VS_mView = "mView";
+
+static const char* FS = R"(
 in vec4 i_color;
 in vec4 i_normal;
 in vec4 i_position;

@@ -13,8 +13,18 @@ inline void _validate_program(GLuint handle, const char* name);
 
 std::string read_shader_file(const char* path);
 
-struct ShaderProgram::Impl {
+struct ShaderProgram::Impl : public ShaderBinder {
     GLuint handle;
+    std::vector<GLint> uniform_locations;
+
+    unsigned int uniform_location(UniformID id) override
+    {
+        GFX_ASSERT(0 <= id && id < uniform_locations.size() && uniform_locations[id] >= 0,
+            "UniformID must be in the requested shader");
+
+        return uniform_locations[id];
+    }
+
     ~Impl();
 };
 
@@ -26,6 +36,8 @@ ShaderProgram::Builder::Builder(const std::string& _name)
     : glsl_version("#version 450\n\n")
     , name(_name)
     , constants()
+    , uniform_ids()
+    , max_uniform_id(0)
     , impl(new Impl)
 {
     this->impl->handle = glCreateProgram();
@@ -133,15 +145,23 @@ ShaderProgram::Builder& ShaderProgram::Builder::with_constant(const char* name, 
 
 ShaderProgram ShaderProgram::Builder::build()
 {
-
     glLinkProgram(this->impl->handle);
 
 #ifdef GFX_VALIDATION
     _validate_program(this->impl->handle, this->name.data());
 #endif
 
+    std::vector<int> uniform_locations(max_uniform_id + 1, -1);
+    for (auto& it : uniform_ids) {
+        GLint location = glGetUniformLocation(this->impl->handle, it.first.c_str());
+        GFX_ASSERT(location >= 0, "Requested uniform \"%s\" does not exist in shader \"%s\"", it.first.c_str(), this->name.c_str());
+
+        uniform_locations[it.second] = location;
+    }
+
     ShaderProgram program;
     program.impl->handle = this->impl->handle;
+    program.impl->uniform_locations = std::move(uniform_locations);
 
     return program;
 }
@@ -167,8 +187,14 @@ ShaderProgram::~ShaderProgram()
 
 void ShaderProgram::use()
 {
-    GFX_ASSERT(this->impl->handle != 0, "Using an invalid ShaderProgram");
+    GFX_CHECK(this->impl->handle != 0, "Using an invalid ShaderProgram");
     glUseProgram(this->impl->handle);
+}
+
+// Do not confuse with bender ·-(8U|
+ShaderBinder& ShaderProgram::get_binder()
+{
+    return *impl;
 }
 
 // File read

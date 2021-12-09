@@ -13,11 +13,12 @@
 namespace gfx {
 
 template <typename CameraImpl>
-class ICamera {
+class ICamera : public IBindable<CameraImpl>{
 public:
-    void bind_camera() {
-        static_cast<CameraImpl*>(this)->bind_camera();
+    void bind(ShaderBinder& binder) {
+        static_cast<CameraImpl*>(this)->bind(binder);
     };
+
     glm::mat4 get_matrix() {
         return static_cast<CameraImpl*>(this)->get_matrix();
     }
@@ -96,6 +97,11 @@ public:
         , culling(_culling)
         , blending(_blending)
     {
+    }
+
+    ShaderBinder& get_binder()
+    {
+        return shader->get_binder();
     }
 
     void use();

@@ -4,6 +4,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace gfx {
 
@@ -20,6 +21,7 @@ public:
     ~ShaderProgram();
 
     void use();
+    ShaderBinder& get_binder();
 
 private:
     ShaderProgram();
@@ -47,16 +49,29 @@ public:
     Builder& with_constant(const char* name, unsigned int value);
     Builder& with_constant(const char* name, float value);
 
-    template <typename Semantics>
-    Builder& register_uniform()
+    // Register uniform id at the specified location
+    Builder& register_uniform(const char* location, UniformID id)
     {
-        return this->with_constant(Semantics::location, Uniform<Semantics>::location);
+        uniform_ids.push_back(std::make_pair(location, id));
+        if (id > max_uniform_id) {
+            max_uniform_id = id;
+        }
+
+        return *this;
     }
 
-    template <typename Registrable>
-    Builder& register_class()
+    // Register uniform type at the specified location
+    template <typename Semantics>
+    Builder& register_uniform(const char* location)
     {
-        Registrable::register_shader(*this);
+        return register_uniform(location, Uniform<Semantics>::uniform_id);
+    }
+
+    /// Register class with the shader. The arguments `args` depend on the registered class `Registrable`
+    template <typename Registrable, typename... Args>
+    Builder& register_class(Args&&... args)
+    {
+        Registrable::register_shader(*this, std::forward<Args>(args)...);
         return *this;
     }
 
@@ -76,6 +91,9 @@ private:
     std::string glsl_version;
     std::string name;
     std::stringstream constants;
+
+    std::vector<std::pair<std::string, size_t>> uniform_ids;
+    UniformID max_uniform_id;
 
     struct Impl;
     std::unique_ptr<Impl> impl;

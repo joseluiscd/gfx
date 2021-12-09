@@ -37,9 +37,9 @@ layout (location = kNormal) in vec3 v_normal;
 layout (location = kColor) in vec3 v_color;
 
 
-layout (location = kProjectionMatrix) uniform mat4 mProj;
-layout (location = kModelMatrix) uniform mat4 mModel;
-layout (location = kViewMatrix) uniform mat4 mView;
+uniform mat4 mProj;
+uniform mat4 mModel;
+uniform mat4 mView;
 
 out vec4 i_color;
 out vec4 i_normal;
@@ -71,7 +71,6 @@ class Object : public gfx::IBindable<Object>, public gfx::IDrawable<Object> {
 public:
     struct ModelMatrix : public gfx::UniformSemantics {
         using type = glm::mat4;
-        static constexpr const char* location = "kModelMatrix";
     };
 
     Object()
@@ -156,9 +155,9 @@ public:
         *this->modelView = glm::translate(glm::vec3(0.0f, 0.0f, -2.0f));
     }
 
-    virtual void bind()
+    virtual void bind(gfx::ShaderBinder& binder)
     {
-        modelView.bind();
+        modelView.bind(binder);
     }
 
     virtual void draw()
@@ -184,9 +183,9 @@ int main()
 
     gfx::RenderPipeline pipeline = gfx::RenderPipeline::Builder("example")
                                        .with_shader(gfx::ShaderProgram::Builder("example")
-                                                        .register_uniform<Object::ModelMatrix>()
-                                                        .register_class<gfx::CameraLens>()
-                                                        .register_class<gfx::CameraRig>()
+                                                        .register_class<gfx::CameraLens>("mView")
+                                                        .register_class<gfx::CameraRig>("mProj")
+                                                        .register_uniform<Object::ModelMatrix>("mModel")
                                                         .with_constant("kPosition", Attrib::Position)
                                                         .with_constant("kNormal", Attrib::Normal)
                                                         .with_constant("kColor", Attrib::Color)

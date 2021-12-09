@@ -67,11 +67,11 @@ public:
             return *this->pass;
         }
 
-        /// Bind camera to the pipeline
+        /// Bind camera to the pipeline. Same as RenderPass::bind.
         template <typename Camera>
         [[nodiscard]] RenderPass::Pipeline& with_camera(ICamera<Camera>& c)
         {
-            c.bind_camera();
+            c.bind(pipeline->get_binder());
             return *this;
         }
 
@@ -79,7 +79,7 @@ public:
         template <typename Bindable>
         [[nodiscard]] RenderPass::Pipeline& bind(IBindable<Bindable>& b)
         {
-            b.bind();
+            b.bind(pipeline->get_binder());
             return *this;
         }
 

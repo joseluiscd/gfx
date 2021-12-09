@@ -10,7 +10,6 @@ class CameraLens : public IResizeObserver, public ICamera<CameraLens> {
 public:
     struct ProjectionMatrix : public UniformSemantics {
         using type = glm::mat4;
-        static constexpr const char* location = "kProjectionMatrix";
     };
 
     CameraLens()
@@ -32,9 +31,9 @@ public:
     glm::mat4& projection_matrix() { return *proj_matrix; }
     const glm::mat4& projection_matrix() const { return *proj_matrix; }
 
-    void bind_camera() //override
+    void bind(ShaderBinder& binder)
     {
-        proj_matrix.bind();
+        proj_matrix.bind(binder);
     }
 
     glm::mat4 get_matrix() //override
@@ -42,9 +41,9 @@ public:
         return *proj_matrix;
     }
 
-    static void register_shader(ShaderProgram::Builder& builder)
+    static void register_shader(ShaderProgram::Builder& builder, const char* location)
     {
-        builder.register_uniform<ProjectionMatrix>();
+        builder.register_uniform<ProjectionMatrix>(location);
     }
 
 protected:
@@ -137,10 +136,10 @@ public:
     }
 
     /// Binds this camera rig and the lens
-    void bind_camera() //override
+    void bind(ShaderBinder& binder) //override
     {
-        _lens->bind_camera();
-        view_matrix.bind();
+        _lens->bind(binder);
+        view_matrix.bind(binder);
     }
 
     glm::mat4 get_matrix() //override
@@ -148,9 +147,9 @@ public:
         return _lens->get_matrix() * (*view_matrix);
     }
 
-    static void register_shader(ShaderProgram::Builder& builder)
+    static void register_shader(ShaderProgram::Builder& builder, const char* location)
     {
-        builder.register_uniform<ViewMatrix>();
+        builder.register_uniform<ViewMatrix>(location);
     }
 
     //Movement

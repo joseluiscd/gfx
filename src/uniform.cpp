@@ -5,17 +5,17 @@ namespace gfx {
 
 namespace uniform {
     // Not thread-safe
-    unsigned int generate_location(unsigned int size)
+    UniformID generate_location(unsigned int size)
     {
-        static unsigned int next_location = 0;
+        static UniformID next_location = 0;
 
-        unsigned int ret = next_location;
+        UniformID ret = next_location;
         next_location += size;
         return ret;
     }
 }
 
-namespace _impl_UniformType {
+namespace uniform::detail {
     void upload_uint(unsigned int uniform, unsigned int location)
     {
         glUniform1ui(location, uniform);

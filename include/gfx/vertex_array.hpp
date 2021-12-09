@@ -148,10 +148,12 @@ private:
 };
 
 // TODO: Declare attribs in a DSL fashion
+/*
 template <typename Type>
 VertexArray::Layout::Entry attrib(int index)
 {
 }
+*/
 
 template <typename T>
 VertexArray& VertexArray::add_buffer(const Layout& layout, const Buffer<T>& buffer)
