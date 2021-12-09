@@ -22,13 +22,10 @@ struct Vertex {
     glm::vec3 normal;
     glm::vec3 color;
 
-    static const gfx::VertexArray::Layout layout;
-};
-
-const gfx::VertexArray::Layout Vertex::layout = {
-    { Attrib::Position, 3, gfx::Type::Float },
-    { Attrib::Normal, 3, gfx::Type::Float },
-    { Attrib::Color, 3, gfx::Type::Float },
+    GFX_VERTEX_LAYOUT(
+        { Attrib::Position, 3, gfx::Type::Float },
+        { Attrib::Normal, 3, gfx::Type::Float },
+        { Attrib::Color, 3, gfx::Type::Float });
 };
 
 const char* VS = R"(
@@ -148,8 +145,8 @@ public:
         });
 
         vao
-            .add_buffer(Vertex::layout, std::move(vertices))
-            .set_indices_buffer(std::move(indices))
+            .add_buffer(vertices)
+            .set_indices_buffer(indices)
             .set_mode(gfx::Mode::Triangles);
 
         *this->modelView = glm::translate(glm::vec3(0.0f, 0.0f, -2.0f));
@@ -183,8 +180,8 @@ int main()
 
     gfx::RenderPipeline pipeline = gfx::RenderPipeline::Builder("example")
                                        .with_shader(gfx::ShaderProgram::Builder("example")
-                                                        .register_class<gfx::CameraLens>("mView")
-                                                        .register_class<gfx::CameraRig>("mProj")
+                                                        .register_class<gfx::CameraLens>("mProj")
+                                                        .register_class<gfx::CameraRig>("mView")
                                                         .register_uniform<Object::ModelMatrix>("mModel")
                                                         .with_constant("kPosition", Attrib::Position)
                                                         .with_constant("kNormal", Attrib::Normal)
