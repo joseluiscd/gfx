@@ -61,10 +61,14 @@ public:
     }
 
     // Register uniform type at the specified location
-    template <typename Semantics>
+    template <typename T>
     Builder& register_uniform(const char* location)
     {
-        return register_uniform(location, Uniform<Semantics>::uniform_id);
+        if constexpr (std::is_base_of_v<UniformSemantics, T>) {
+            return register_uniform(location, Uniform<T>::uniform_id);
+        } else {
+            return register_uniform(location, T::uniform_id);
+        }
     }
 
     /// Register class with the shader. The arguments `args` depend on the registered class `Registrable`
