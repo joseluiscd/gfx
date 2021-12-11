@@ -1,4 +1,3 @@
-#include <fmt/format.h>
 #include <fstream>
 #include <gfx/glad.h>
 #include <gfx/log.hpp>
@@ -49,13 +48,15 @@ ShaderProgram::Builder::~Builder()
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_version(unsigned int version)
 {
-    this->glsl_version = fmt::format("#version {}\n\n", version);
+    std::stringstream ss;
+    ss << "#version " << version << "\n\n";
+    this->glsl_version = ss.str();
     return *this;
 }
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_vertex_shader(const char* source)
 {
-    std::string tmp = constants.str();
+    std::string tmp = constants.str() + "\n#line 0\n";
     const char* sources[] = { glsl_version.data(), tmp.data(), source };
 
     GLuint shader_handle = glCreateShader(GL_VERTEX_SHADER);
@@ -73,7 +74,7 @@ ShaderProgram::Builder& ShaderProgram::Builder::with_vertex_shader(const char* s
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_fragment_shader(const char* source)
 {
-    std::string tmp = constants.str();
+    std::string tmp = constants.str() + "\n#line 0\n";
     const char* sources[] = { glsl_version.data(), tmp.data(), source };
 
     GLuint shader_handle = glCreateShader(GL_FRAGMENT_SHADER);
@@ -91,7 +92,7 @@ ShaderProgram::Builder& ShaderProgram::Builder::with_fragment_shader(const char*
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_geometry_shader(const char* source)
 {
-    std::string tmp = constants.str();
+    std::string tmp = constants.str() + "\n#line 0\n";
     const char* sources[] = { glsl_version.data(), tmp.data(), source };
 
     GLuint shader_handle = glCreateShader(GL_GEOMETRY_SHADER);
@@ -124,22 +125,19 @@ ShaderProgram::Builder& ShaderProgram::Builder::with_geometry_shader_file(const 
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_constant(const char* name, int value)
 {
-    this->constants << fmt::format("#define {} {}\n", name, value);
-
+    this->constants << "#define " << name << " " << value << "\n";
     return *this;
 }
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_constant(const char* name, unsigned int value)
 {
-    this->constants << fmt::format("#define {} {}\n", name, value);
-
+    this->constants << "#define " << name << " " << value << "\n";
     return *this;
 }
 
 ShaderProgram::Builder& ShaderProgram::Builder::with_constant(const char* name, float value)
 {
-    this->constants << fmt::format("#define {} {}\n", name, value);
-
+    this->constants << "#define " << name << " " << value << "\n";
     return *this;
 }
 
