@@ -1,6 +1,6 @@
 // File: 'fa-regular-400.ttf' (34052 bytes)
 // Exported using binary_to_compressed_c.cpp
-#include "private/font_awesome.hpp"
+#include "font_awesome.hpp"
 
 const char font_awesome_compressed_data_base85[27830+1] =
     "7])#######WjJI$'/###[),##0rC$#Q6>##T@;*>V+D@dvx*GMwA'o/fY;99>wK'#v)m<-TA^01iZn42'H)m=?,>>#CEnB4aNV=BpTsKdrI:;$2>uu#:b(*Hlme+Mi4,GMid5&5#-0%J"

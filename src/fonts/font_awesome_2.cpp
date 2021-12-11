@@ -1,6 +1,6 @@
 // File: 'fa-solid-900.ttf' (204528 bytes)
 // Exported using binary_to_compressed_c.cpp
-#include "private/font_awesome.hpp"
+#include "font_awesome.hpp"
 
 const char font_awesome_2_compressed_data_base85[181065+1] =
     "7])#######5]b1q'/###[),##0rC$#Q6>##T@;*>V+D@diDoY,cA'o/fY;99A<H$$s*m<-@A^01iZn42gKlh>/->>#CEnB4aNV=BDwEeuihFJ(B;jl&.b(*Hlme+MZVpY,Td5&5#-0%J"

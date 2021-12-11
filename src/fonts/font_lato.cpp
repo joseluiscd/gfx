@@ -1,4 +1,4 @@
-#include "private/font_lato.hpp"
+#include "font_lato.hpp"
 
 // File: 'Lato-Regular.ttf' (75136 bytes)
 // Exported using binary_to_compressed_c.cpp

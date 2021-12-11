@@ -15,8 +15,12 @@
 
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include "private/font_awesome.hpp"
-#include "private/font_lato.hpp"
+
+#ifdef GFX_ENABLE_FONTAWESOME
+#include "fonts/font_awesome.hpp"
+#endif
+
+#include "fonts/font_lato.hpp"
 
 namespace gfx {
 
@@ -302,6 +306,25 @@ void APIENTRY glDebugOutput(GLenum source,
     std::cout << std::endl;
 }
 
+#ifdef GFX_ENABLE_FONTAWESOME
+void add_fontawesome_icons() {
+    ImFontConfig cfg;
+    ImGuiIO& io = ImGui::GetIO();
+
+    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+    cfg.MergeMode = true;
+    cfg.PixelSnapH = true;
+    cfg.GlyphMinAdvanceX = 20.0;
+    cfg.GlyphMaxAdvanceX = 20.0;
+    std::copy_n("FontAwesome", 12, cfg.Name);
+
+    io.Fonts->AddFontFromMemoryCompressedBase85TTF(font_awesome_compressed_data_base85, 16.0, &cfg, icons_ranges);
+    io.Fonts->AddFontFromMemoryCompressedBase85TTF(font_awesome_2_compressed_data_base85, 16.0, &cfg, icons_ranges);
+}
+#else
+#define add_fontawesome_icons()
+#endif
+
 void setup_imgui_style()
 {
     ImGui::StyleColorsLight();
@@ -313,20 +336,15 @@ void setup_imgui_style()
 
     ImGuiIO& io = ImGui::GetIO();
 
+#ifdef GFX_ENABLE_LATO
     ImFontConfig cfg;
     std::copy_n("Lato", 5, cfg.Name);
     io.Fonts->AddFontFromMemoryCompressedBase85TTF(lato_compressed_data_base85, 16.0, &cfg);
+    add_fontawesome_icons();
+#endif
 
-    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-    cfg.MergeMode = true;
-    cfg.PixelSnapH = true;
-    cfg.GlyphMinAdvanceX = 20.0;
-    cfg.GlyphMaxAdvanceX = 20.0;
-    std::copy_n("FontAwesome", 12, cfg.Name);
-
-    io.Fonts->AddFontFromMemoryCompressedBase85TTF(font_awesome_compressed_data_base85, 16.0, &cfg, icons_ranges);
-    io.Fonts->AddFontFromMemoryCompressedBase85TTF(font_awesome_2_compressed_data_base85, 16.0, &cfg, icons_ranges);
     io.Fonts->AddFontDefault();
+    add_fontawesome_icons();
 }
 
 } // namespace gfx
