@@ -50,7 +50,9 @@ bool BeginFramebuffer(
                 | ImGuiButtonFlags_MouseButtonLeft
                 | ImGuiButtonFlags_MouseButtonMiddle);
     } else {
-        ImGui::InvisibleButton("3D Window", size, ImGuiButtonFlags_Disabled);
+        ImGui::BeginDisabled();
+        ImGui::InvisibleButton("3D Window", size);
+        ImGui::EndDisabled();
     }
 
     return true;
