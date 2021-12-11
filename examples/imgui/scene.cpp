@@ -6,9 +6,9 @@
 
 
 const gfx::VertexArray::Layout Vertex::layout = {
-    { Attrib::Position, 3, gfx::Type::Float },
-    { Attrib::Normal, 3, gfx::Type::Float },
-    { Attrib::Color, 3, gfx::Type::Float },
+    gfx::attrib<glm::vec3>(Attrib::Position),
+    gfx::attrib<glm::vec3>(Attrib::Normal),
+    gfx::attrib<glm::vec3>(Attrib::Color),
 };
 
 Scene::Scene()

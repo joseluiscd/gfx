@@ -3,24 +3,24 @@
 
 namespace gfx {
 
-GLuint Type_get_GL(Type t)
+GLuint Type_get_GL(PrimitiveType t)
 {
     switch (t) {
-    case Type::Byte:
+    case PrimitiveType::Byte:
         return GL_BYTE;
-    case Type::Float:
+    case PrimitiveType::Float:
         return GL_FLOAT;
-    case Type::Double:
+    case PrimitiveType::Double:
         return GL_DOUBLE;
-    case Type::Int16:
+    case PrimitiveType::Int16:
         return GL_SHORT;
-    case Type::Int32:
+    case PrimitiveType::Int32:
         return GL_INT;
-    case Type::UnsignedByte:
+    case PrimitiveType::UnsignedByte:
         return GL_UNSIGNED_BYTE;
-    case Type::Unsigned16:
+    case PrimitiveType::Unsigned16:
         return GL_UNSIGNED_SHORT;
-    case Type::Unsigned32:
+    case PrimitiveType::Unsigned32:
         return GL_UNSIGNED_INT;
     default:
         return 0;
@@ -114,7 +114,7 @@ void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer,
             glVertexArrayAttribBinding(vao.impl->id, it->index, buffer_binding);
         }
 
-        offset += Type_size[it->type] * it->count;
+        offset += PrimitiveType_size[it->type] * it->count;
     }
 }
 

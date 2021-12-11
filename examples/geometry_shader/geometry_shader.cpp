@@ -1,5 +1,3 @@
-#define GFX_VALIDATION
-
 #include <gfx/gfx.hpp>
 #include <gfx/glad.h>
 #include <gfx/render_pipeline.hpp>
@@ -19,8 +17,8 @@ struct Vertex {
 };
 
 const gfx::VertexArray::Layout Vertex::layout = {
-    { Attrib::Position, 2, gfx::Type::Float },
-    { Attrib::Color, 3, gfx::Type::Float },
+    gfx::attrib<glm::vec2>(Attrib::Position),
+    gfx::attrib<glm::vec3>(Attrib::Color)
 };
 
 const char* VS = R"(

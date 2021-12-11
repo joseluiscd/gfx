@@ -1,5 +1,3 @@
-#define GFX_VALIDATION
-
 #include <gfx/camera.hpp>
 #include <gfx/gfx.hpp>
 #include <gfx/glad.h>
@@ -23,9 +21,9 @@ struct Vertex {
     glm::vec3 color;
 
     GFX_VERTEX_LAYOUT(
-        { Attrib::Position, 3, gfx::Type::Float },
-        { Attrib::Normal, 3, gfx::Type::Float },
-        { Attrib::Color, 3, gfx::Type::Float });
+        gfx::attrib<glm::vec3>(Attrib::Position),
+        gfx::attrib<glm::vec3>(Attrib::Normal),
+        gfx::attrib<glm::vec3>(Attrib::Color));
 };
 
 const char* VS = R"(

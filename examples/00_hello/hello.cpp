@@ -38,8 +38,8 @@ struct Vertex {
     glm::vec3 color;
 
     GFX_VERTEX_LAYOUT(
-        { Attrib::Position, 2, gfx::Type::Float },
-        { Attrib::Color, 3, gfx::Type::Float },
+        gfx::attrib<glm::vec2>(Attrib::Position),
+        gfx::attrib<glm::vec3>(Attrib::Color)
     );
 };
 

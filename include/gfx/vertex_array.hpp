@@ -4,6 +4,7 @@
 #include <gfx/buffer.hpp>
 #include <gfx/log.hpp>
 #include <gfx/render_pipeline.hpp>
+#include <gfx/type_info.hpp>
 #include <initializer_list>
 #include <memory>
 #include <optional>
@@ -78,28 +79,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-enum Type : size_t {
-    Byte,
-    Float,
-    Double,
-    Int16,
-    Int32,
-    UnsignedByte,
-    Unsigned16,
-    Unsigned32,
-};
-
-constexpr const size_t Type_size[] = {
-    sizeof(std::byte), // Byte
-    sizeof(float), // Float
-    sizeof(double), // Double
-    sizeof(std::int16_t), // Int16
-    sizeof(std::int32_t), // Int32
-    sizeof(std::byte), // UnsignedByte
-    sizeof(std::uint16_t), // Unsigned16
-    sizeof(std::uint32_t), // Unsigned32
-};
-
 #define GFX_VERTEX_LAYOUT(...) static constexpr const ::gfx::VertexArray::Layout __gfx_layout = { __VA_ARGS__ };
 
 /// Specifies layout of a Vertex Attribute Object
@@ -116,7 +95,7 @@ public:
         unsigned int count;
 
         /// Type of argument (float = Float, glm::vec3 = Float, glm::ivec2 = Int)
-        Type type;
+        PrimitiveType type;
     };
 
     constexpr Layout(std::initializer_list<Entry> v)
@@ -133,7 +112,7 @@ public:
         size_t i = 0;
         for (auto it = v.begin(); it != v.end(); ++it) {
             entries[i++] = *it;
-            size += it->count * Type_size[it->type];
+            size += it->count * PrimitiveType_size[it->type];
         }
     }
 
@@ -147,13 +126,15 @@ private:
     void apply(const VertexArray& vao, const RawBuffer& buffer, unsigned index) const;
 };
 
-// TODO: Declare attribs in a DSL fashion
-/*
-template <typename Type>
-VertexArray::Layout::Entry attrib(int index)
+template <typename Type, typename = std::void_t<VectorTypeInfo<Type>>>
+constexpr VertexArray::Layout::Entry attrib(int index)
 {
+    return VertexArray::Layout::Entry {
+        index,
+        VectorTypeInfo<Type>::count,
+        PrimitiveTypeInfo<typename VectorTypeInfo<Type>::base_type>::type_id
+    };
 }
-*/
 
 template <typename T>
 VertexArray& VertexArray::add_buffer(const Layout& layout, const Buffer<T>& buffer)

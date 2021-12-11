@@ -5,8 +5,8 @@
 namespace gfx {
 
 const VertexArray::Layout DebugPoint::layout = {
-    { 1, 3, Type::Float },
-    { 2, 3, Type::Float }
+    gfx::attrib<glm::vec3>(1),
+    gfx::attrib<glm::vec3>(2)
 };
 
 void DebugDraw::Builder::point(const glm::vec3& p)

@@ -1,5 +1,3 @@
-#define GFX_VALIDATION
-
 #include <gfx/font_awesome.hpp>
 #include <gfx/framebuffer.hpp>
 #include <gfx/gfx.hpp>
