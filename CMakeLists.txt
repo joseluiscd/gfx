@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 option(GFX_BUILD_EXAMPLES "Build examples" ON)
 option(GFX_VALIDATION "Enable validation for shaders and other useful things. Disable for optimization" ON)
+option(GFX_IMGUI_FREETYPE "Use FreeType as TTF rasterizer instead of STB in ImGui fonts" ON)
+#option(GFX_BUILD_LATO_FONT "Build Lato font into ImGui" ON)
+#option(GFX_BUILD_FONTAWESOME "Build FontAwesome fonts into ImGui." ON)
 
 include(GNUInstallDirs)
 
@@ -17,7 +20,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(glfw3 3.3 REQUIRED)
 find_package(glm 0.9 REQUIRED)
 find_package(fmt 7.0 REQUIRED)
-find_package(Freetype 2.10 REQUIRED)
+find_package(Freetype 2.10)
 
 # Some platforms define glm instead of glm::glm
 if (TARGET glm AND NOT TARGET glm::glm)
@@ -30,12 +33,25 @@ include(GNUInstallDirs)
 file(GLOB SOURCES src/*.cpp src/*.c src/*.hpp src/imgui/*.cpp src/imgui/*.h src/debug_draw/*.hpp)
 file(GLOB HEADERS include/gfx/*.hpp include/gfx/*.h)
 
+# Some configuration options
+set(DEFINES)
+set(LIBRARIES)
+if (GFX_IMGUI_FREETYPE AND Freetype_FOUND)
+    message("Using Freetype as ImGui font rasterizer")
+    list(APPEND DEFINES IMGUI_ENABLE_FREETYPE)
+    list(APPEND SOURCES src/imgui_freetype/imgui_freetype.cpp)
+    list(APPEND LIBRARIES Freetype::Freetype)
+endif()
+
 add_library(gfx STATIC ${HEADERS} ${SOURCES})
-target_link_libraries(gfx PUBLIC ${CMAKE_DL_LIBS} glfw glm::glm fmt::fmt Freetype::Freetype)
+target_link_libraries(gfx PUBLIC ${CMAKE_DL_LIBS} glfw glm::glm fmt::fmt ${LIBRARIES})
 target_include_directories(gfx
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+target_compile_definitions(gfx
+    PRIVATE ${GFX_DEFINES}
 )
 
 if(GFX_VALIDATION)
@@ -59,7 +75,6 @@ install(
     TARGETS gfx
     
     EXPORT gfxTargets
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gfx
     )
 export(EXPORT gfxTargets)
 install(EXPORT gfxTargets DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/gfx)
