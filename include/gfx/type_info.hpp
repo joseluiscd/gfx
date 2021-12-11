@@ -77,13 +77,13 @@ template <typename Element, typename = void>
 struct VectorTypeInfo;
 
 template <typename Element>
-struct VectorTypeInfo<Element, std::void_t<PrimitiveTypeInfo<Element>>> {
+struct VectorTypeInfo<Element, std::void_t<decltype(PrimitiveTypeInfo<Element>::type_id)>> {
     using base_type = Element;
     static constexpr const size_t count = 1;
 };
 
-template <typename T, size_t L>
-struct VectorTypeInfo<glm::vec<L, T>> {
+template <typename T, glm::length_t L, glm::qualifier Q>
+struct VectorTypeInfo<glm::vec<L, T, Q>> {
     using base_type = T;
     static constexpr const size_t count = L;
 };

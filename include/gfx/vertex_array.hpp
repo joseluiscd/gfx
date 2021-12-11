@@ -129,10 +129,12 @@ private:
 template <typename Type, typename = std::void_t<VectorTypeInfo<Type>>>
 constexpr VertexArray::Layout::Entry attrib(int index)
 {
+    using BaseType = typename VectorTypeInfo<Type>::base_type;
+
     return VertexArray::Layout::Entry {
         index,
         VectorTypeInfo<Type>::count,
-        PrimitiveTypeInfo<typename VectorTypeInfo<Type>::base_type>::type_id
+        PrimitiveTypeInfo<BaseType>::type_id
     };
 }
 
