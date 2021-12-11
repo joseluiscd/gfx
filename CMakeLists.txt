@@ -10,8 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 option(GFX_BUILD_EXAMPLES "Build examples" ON)
 option(GFX_VALIDATION "Enable validation for shaders and other useful things. Disable for optimization" ON)
 option(GFX_IMGUI_FREETYPE "Use FreeType as TTF rasterizer instead of STB in ImGui fonts" ON)
-#option(GFX_BUILD_LATO_FONT "Build Lato font into ImGui" ON)
-#option(GFX_BUILD_FONTAWESOME "Build FontAwesome fonts into ImGui." ON)
+option(GFX_ENABLE_FONTAWESOME "Build FontAwesome fonts into ImGui." ON)
+option(GFX_ENABLE_LATO_FONT "Build Lato font into ImGui" ON)
 
 include(GNUInstallDirs)
 
@@ -19,7 +19,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(glfw3 3.3 REQUIRED)
 find_package(glm 0.9 REQUIRED)
-find_package(fmt 7.0 REQUIRED)
 find_package(Freetype 2.10)
 
 # Some platforms define glm instead of glm::glm
@@ -42,16 +41,26 @@ if (GFX_IMGUI_FREETYPE AND Freetype_FOUND)
     list(APPEND SOURCES src/imgui_freetype/imgui_freetype.cpp)
     list(APPEND LIBRARIES Freetype::Freetype)
 endif()
+if (GFX_ENABLE_FONTAWESOME)
+    message("Building fontawesome font into imgui")
+    list(APPEND DEFINES GFX_ENABLE_FONTAWESOME)
+    list(APPEND SOURCES src/fonts/font_awesome.cpp src/fonts/font_awesome_2.cpp)
+endif()
+if (GFX_ENABLE_LATO_FONT)
+    message("Building lato font into imgui")
+    list(APPEND DEFINES GFX_ENABLE_LATO)
+    list(APPEND SOURCES src/fonts/font_lato.cpp)
+endif()
 
 add_library(gfx STATIC ${HEADERS} ${SOURCES})
-target_link_libraries(gfx PUBLIC ${CMAKE_DL_LIBS} glfw glm::glm fmt::fmt ${LIBRARIES})
+target_link_libraries(gfx PUBLIC ${CMAKE_DL_LIBS} glfw glm::glm ${LIBRARIES})
 target_include_directories(gfx
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_compile_definitions(gfx
-    PRIVATE ${GFX_DEFINES}
+    PRIVATE ${DEFINES}
 )
 
 if(GFX_VALIDATION)

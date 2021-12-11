@@ -17,8 +17,10 @@ GFX requires at least:
 
 - glfw 3.3
 - glm 0.9
-- fmtlib 7.0
-- Freetype 2.10
+
+Optional dependencies:
+- Freetype 2.10: If package is found and `GFX_IMGUI_FREETYPE` CMake option is enabled,
+it is used as the default rasterizer for ImGui fonts.
 
 ## Usage
 
@@ -59,4 +61,3 @@ Some tasks to improve the library:
 
 - Camera refactor (different `gfx::CameraRig` controls)
 - Make vertex attribute creation similar to uniforms
-- Make some libraries optional (freetype)
