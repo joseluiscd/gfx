@@ -4,6 +4,8 @@
 #include <memory>
 
 namespace gfx {
+    
+using TextureUnit = unsigned int;
 
 enum class TextureType {
     Rgb,
@@ -28,6 +30,7 @@ public:
     TextureHandle(TextureKind kind);
     TextureHandle(const TextureHandle& other);
     TextureHandle(TextureHandle&& other);
+    ~TextureHandle();
 
     TextureHandle& operator=(const TextureHandle& other);
     TextureHandle& operator=(TextureHandle&& other);

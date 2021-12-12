@@ -50,14 +50,14 @@ app.main_loop([&]() {
 
 ## Missing features (planned)
 
-- Debug drawing API
-- Using textures and samplers in shaders
 - Compute shaders
 - Instanced rendering
+- Finish the debug drawing API
+- Shader Storage Buffer
+- Uniform Storage Buffer
 
 ## TODO
 
 Some tasks to improve the library:
 
 - Camera refactor (different `gfx::CameraRig` controls)
-- Make vertex attribute creation similar to uniforms

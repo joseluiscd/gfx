@@ -3,13 +3,12 @@
 
 namespace gfx {
 
-
 struct TextureHandle::Impl {
     ~Impl();
 
     GLuint id = 0;
     GLenum kind = GL_TEXTURE_2D;
-    glm::ivec2 _size = {0, 0};
+    glm::ivec2 _size = { 0, 0 };
     TextureType tex_type = TextureType::Rgb;
 };
 
@@ -71,8 +70,7 @@ GLenum TextureType_get_GL_type(TextureType t)
 
 GLenum TextureKind_get_GL(TextureKind k)
 {
-    switch (k)
-    {
+    switch (k) {
     case TextureKind::Image:
         return GL_TEXTURE_2D;
     case TextureKind::Multisample:
@@ -101,6 +99,10 @@ TextureHandle::TextureHandle(Impl* _impl)
 {
 }
 
+TextureHandle::~TextureHandle()
+{
+}
+
 TextureHandle::TextureHandle(const TextureHandle& other) = default;
 TextureHandle::TextureHandle(TextureHandle&& other) = default;
 
@@ -122,8 +124,7 @@ void TextureHandle::reserve_size(glm::ivec2 _size, unsigned levels, TextureType 
     impl->_size = _size;
     impl->tex_type = t;
 
-    switch (impl->kind)
-    {
+    switch (impl->kind) {
     case GL_TEXTURE_2D:
         glTextureStorage2D(impl->id, levels, TextureType_get_GL_internal(t), _size.x, _size.y);
         break;

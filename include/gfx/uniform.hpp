@@ -70,7 +70,7 @@ public:
         UniformType<Type>::upload(value, binder.uniform_location(uniform_id));
     }
 
-private:
+protected:
     Type value;
 };
 

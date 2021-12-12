@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gfx/uniform.hpp>
+#include <gfx/texture_binding.hpp>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -69,6 +70,12 @@ public:
         } else {
             return register_uniform(location, T::uniform_id);
         }
+    }
+
+    template <TextureUnit UNIT>
+    Builder& register_texture(const char* location)
+    {
+        return register_uniform<TextureBinding<UNIT>>(location);
     }
 
     /// Register class with the shader. The arguments `args` depend on the registered class `Registrable`
