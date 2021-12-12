@@ -6,19 +6,19 @@
 namespace gfx {
 
 /// This raw buffer doesn't own the data
-class RawBuffer {
+class BufferHandle {
 public:
-    RawBuffer();
-    RawBuffer(const RawBuffer& other) = default;
+    BufferHandle();
+    BufferHandle(const BufferHandle& other) = default;
 
     /// Build the buffer with a pointer and size in bytes
-    RawBuffer(const void* buffer, size_t size_bytes, bool dynamic = false)
-        : RawBuffer()
+    BufferHandle(const void* buffer, size_t size_bytes, bool dynamic = false)
+        : BufferHandle()
     {
         this->update_raw_buffer_bytes(buffer, size_bytes, dynamic);
     }
 
-    virtual ~RawBuffer();
+    virtual ~BufferHandle();
 
     void bind_vertex_array() const;
     void bind_element_array() const;
@@ -89,8 +89,8 @@ public:
     ///Moves data
     void update_buffer(std::vector<T>&& data, bool dynamic = false);
 
-    RawBuffer& get_raw() { return raw_buffer; }
-    const RawBuffer& get_raw() const { return raw_buffer; }
+    BufferHandle& get_raw() { return raw_buffer; }
+    const BufferHandle& get_raw() const { return raw_buffer; }
 
     const T& operator[](size_t i) const
     {
@@ -111,13 +111,13 @@ public:
 
 private:
     std::vector<T> data;
-    RawBuffer raw_buffer;
+    BufferHandle raw_buffer;
 
     void update_buffer(bool dynamic = false);
 };
 
 template <typename T>
-void RawBuffer::update_raw_buffer(T* buffer, size_t count, bool dynamic)
+void BufferHandle::update_raw_buffer(T* buffer, size_t count, bool dynamic)
 {
     update_raw_buffer_bytes((void*) buffer, count * sizeof(T), dynamic);
 }

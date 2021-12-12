@@ -69,7 +69,7 @@ void VertexArray::draw()
     }
 }
 
-VertexArray& VertexArray::add_buffer(const Layout& layout, const RawBuffer& buffer)
+VertexArray& VertexArray::add_buffer(const Layout& layout, const BufferHandle& buffer)
 {
     layout.apply(*this, buffer, layouts.size());
 
@@ -79,7 +79,7 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, const RawBuffer& buff
     return *this;
 }
 
-void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer, unsigned buffer_binding) const
+void VertexArray::Layout::apply(const VertexArray& vao, const BufferHandle& buffer, unsigned buffer_binding) const
 {
 #ifdef GFX_VALIDATION
     {
@@ -118,7 +118,7 @@ void VertexArray::Layout::apply(const VertexArray& vao, const RawBuffer& buffer,
     }
 }
 
-VertexArray& VertexArray::set_indices_buffer_32(const RawBuffer& data, size_t count)
+VertexArray& VertexArray::set_indices_buffer_32(const BufferHandle& data, size_t count)
 {
     this->elements = std::make_optional(data);
     this->element_count = count;
@@ -129,7 +129,7 @@ VertexArray& VertexArray::set_indices_buffer_32(const RawBuffer& data, size_t co
     return *this;
 }
 
-VertexArray& VertexArray::set_indices_buffer_16(const RawBuffer& data, size_t count)
+VertexArray& VertexArray::set_indices_buffer_16(const BufferHandle& data, size_t count)
 {
     this->elements = std::make_optional(data);
     this->element_count = count;
@@ -142,12 +142,12 @@ VertexArray& VertexArray::set_indices_buffer_16(const RawBuffer& data, size_t co
 
 VertexArray& VertexArray::set_indices_buffer(uint16_t* data, size_t count)
 {
-    return set_indices_buffer_16(RawBuffer(data, count * sizeof(uint16_t)), count);
+    return set_indices_buffer_16(BufferHandle(data, count * sizeof(uint16_t)), count);
 }
 
 VertexArray& VertexArray::set_indices_buffer(uint32_t* data, size_t count)
 {
-    return set_indices_buffer_32(RawBuffer(data, count * sizeof(uint32_t)), count);
+    return set_indices_buffer_32(BufferHandle(data, count * sizeof(uint32_t)), count);
 }
 
 VertexArray& VertexArray::set_indices_buffer(const Buffer<uint16_t>& data)

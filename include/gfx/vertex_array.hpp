@@ -50,10 +50,10 @@ public:
     template <typename T, typename = decltype(T::__gfx_layout)>
     VertexArray& add_buffer(T* data, size_t count);
 
-    VertexArray& add_buffer(const Layout& layout, const RawBuffer& buffer);
+    VertexArray& add_buffer(const Layout& layout, const BufferHandle& buffer);
 
-    VertexArray& set_indices_buffer_16(const RawBuffer& data, size_t count);
-    VertexArray& set_indices_buffer_32(const RawBuffer& data, size_t count);
+    VertexArray& set_indices_buffer_16(const BufferHandle& data, size_t count);
+    VertexArray& set_indices_buffer_32(const BufferHandle& data, size_t count);
     VertexArray& set_indices_buffer(uint16_t* data, size_t count);
     VertexArray& set_indices_buffer(uint32_t* data, size_t count);
     VertexArray& set_indices_buffer(const Buffer<uint16_t>& data);
@@ -70,8 +70,8 @@ public:
 
 private:
     std::vector<Layout> layouts;
-    std::vector<RawBuffer> buffers; // Just for keeping the handle around until the VAO is destroyed
-    std::optional<RawBuffer> elements;
+    std::vector<BufferHandle> buffers; // Just for keeping the handle around until the VAO is destroyed
+    std::optional<BufferHandle> elements;
 
     size_t element_count;
 
@@ -123,7 +123,7 @@ private:
     size_t count;
     size_t size;
 
-    void apply(const VertexArray& vao, const RawBuffer& buffer, unsigned index) const;
+    void apply(const VertexArray& vao, const BufferHandle& buffer, unsigned index) const;
 };
 
 template <typename Type, typename = std::void_t<VectorTypeInfo<Type>>>
@@ -151,7 +151,7 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, T* data, size_t count
 {
     GFX_ASSERT(sizeof(T) == layout.size, "Layout size must match array type size. Found %zu and %zu", sizeof(T), layout.size);
     element_count = count;
-    return add_buffer(layout, RawBuffer(data, count * sizeof(T)));
+    return add_buffer(layout, BufferHandle(data, count * sizeof(T)));
 }
 
 template <typename T, typename>
