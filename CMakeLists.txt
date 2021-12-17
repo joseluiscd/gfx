@@ -1,12 +1,14 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.9)
 
 project(gfx 
     LANGUAGES CXX C
     VERSION 0.0.1
+    DESCRIPTION "A low-level Graphics Library abstraction layer (OpenGL 4.5)"
     )
 
 set(CMAKE_CXX_STANDARD 17)
 
+option(GFX_BUILD_DOC "Build documentation" OFF)
 option(GFX_BUILD_EXAMPLES "Build examples" ON)
 option(GFX_VALIDATION "Enable validation for shaders and other useful things. Disable for optimization" ON)
 option(GFX_IMGUI_FREETYPE "Use FreeType as TTF rasterizer instead of STB in ImGui fonts" ON)
@@ -20,6 +22,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(glfw3 3.3 REQUIRED)
 find_package(glm 0.9 REQUIRED)
 find_package(Freetype 2.10)
+find_package(Doxygen)
 
 # Some platforms define glm instead of glm::glm
 if (TARGET glm AND NOT TARGET glm::glm)
@@ -95,3 +98,4 @@ install(FILES
     ) 
     
 add_subdirectory(examples)
+add_subdirectory(doc)

@@ -37,8 +37,8 @@ app.main_loop([&]() {
 ~~~
 
 The most important objects are the `gfx::RenderPipeline` and `gfx::RenderPass`.
-`RenderPipeline` is the description of a render pipeline (mainly the shaders).
-`RenderPass` is the class used to describe a render pass on a given surface and draw things.
+`gfx::RenderPipeline` is the description of a render pipeline (currently only the shaders).
+`gfx::RenderPass` is the class used to describe a render pass on a given surface and draw things.
 
 ~~~cpp
 app.main_loop([&]() {

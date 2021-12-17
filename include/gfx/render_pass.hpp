@@ -8,6 +8,10 @@
 namespace gfx {
 
 class RenderPass;
+
+/**
+* Framebuffer Clear operation.
+*/
 class ClearOperation {
 public:
     friend class RenderPass;
@@ -18,12 +22,18 @@ public:
         kColorDepth,
     };
 
+    /// Clear operation that cleans nothing.
     static ClearOperation nothing() { return ClearOperation { kNothing, {} }; }
+
+    /// Clear operation that only cleans the color buffer.
+    /// @param color Color to clear the buffer with
     static ClearOperation color(const glm::vec4& color = { 0.0, 0.0, 0.0, 0.0 })
     {
         return ClearOperation(kColor, color);
     }
 
+    /// Clear operation that clears the color buffer and the depth buffer.
+    /// @param color Color to clear the buffer with
     static ClearOperation color_and_depth(const glm::vec4& color = { 0.0, 0.0, 0.0, 0.0 })
     {
         return ClearOperation(kColorDepth, color);
@@ -40,21 +50,40 @@ private:
     }
 };
 
+/**
+* @brief This class encapsulates a render pass.
+*
+* All methods return the current instance of the class as a convenience for chaining method calls.
+* All render operations must be performed by a render pass.
+* @note It is not needed to store it anywhere: for each render pass, create a new object.
+*/
 class RenderPass {
 public:
+    /** 
+    * @brief Create a RenderPass.
+    * @param surface Target RenderSurface to draw to.
+    * @param clear ClearOperation to apply before any draw calls.
+    */
     RenderPass(RenderSurface& surface, ClearOperation clear = ClearOperation::color_and_depth());
     ~RenderPass() { }
+
+    // Delete constructors and assign operators.
     RenderPass(const RenderPass& other) = delete;
     RenderPass& operator=(const RenderPass& other) = delete;
     RenderPass(RenderPass&& other) = delete;
     RenderPass& operator=(RenderPass&& other) = delete;
 
+    /// @brief Object to encapsulate RenderPass operations when a RenderPipeline is in use.
     class Pipeline {
     public:
         friend class RenderPass;
 
-        /// Switches the pipeline to the new one without destroying
-        /// instead of calling end_pipeline and then set_pipeline)
+        /**
+        * @brief Switches the pipeline to the new one without destroying the object.
+        *
+        * Use this method to avoid using `Pipeline::end_pipeline()` and calling again `RenderPass::set_pipeline()`.
+        * @param p The new RenderPipeline.
+        */
         [[nodiscard]] Pipeline& set_pipeline(RenderPipeline& p)
         {
             this->pipeline = &p;
@@ -62,6 +91,10 @@ public:
             return *this;
         }
         
+        /**
+        * @brief Stop using this pipeline and continue using the underlying RenderPass object.
+        * @note There is no need to call this method at the end of the render pass.
+        */
         RenderPass& end_pipeline()
         {
             return *this->pass;

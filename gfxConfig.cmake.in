@@ -2,8 +2,6 @@
 
 find_package(glfw3 3.3 REQUIRED)
 find_package(glm 0.9 REQUIRED)
-find_package(fmt 7.0 REQUIRED)
-find_package(spdlog 1.8 REQUIRED)
-find_package(Freetype 2.10 REQUIRED)
+find_package(Freetype 2.10)
 
 include ( "${CMAKE_CURRENT_LIST_DIR}/gfxTargets.cmake" )
