@@ -35,23 +35,16 @@ class WindowRenderSurface : public RenderSurface {
     friend class Gfx;
 
 public:
-    virtual glm::ivec2 size()
+    virtual glm::ivec2 size() override
     {
         return _size;
     }
 
-    virtual void bind();
+    virtual void bind() override;
 
 private:
     glm::ivec2 _size;
 };
-
-/// Callback has signature `void callback(int key, int action, int mods)`
-using KeyboardCallback = std::function<void(int, int, int)>;
-/// Callback has signature `void callback(glm::ivec2 position)`
-using MouseMoveCallback = std::function<void(glm::vec2)>;
-/// Callback has signature `void callback(int button, int action, int mods)`
-using MouseButtonCallback = std::function<void(int, int, int)>;
 
 class Gfx {
     friend class WindowRenderSurface;
@@ -78,6 +71,13 @@ public:
             step(render_frame);
         }
     }
+
+    /// Callback has signature `void callback(int key, int action, int mods)`
+    using KeyboardCallback = std::function<void(int, int, int)>;
+    /// Callback has signature `void callback(glm::ivec2 position)`
+    using MouseMoveCallback = std::function<void(glm::vec2)>;
+    /// Callback has signature `void callback(int button, int action, int mods)`
+    using MouseButtonCallback = std::function<void(int, int, int)>;
 
     void set_keyboard_callback(KeyboardCallback callback);
     void set_mouse_move_callback(MouseMoveCallback callback);

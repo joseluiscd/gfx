@@ -143,7 +143,7 @@ VertexArray& VertexArray::add_buffer(const Layout& layout, const Buffer<T>& buff
 {
     GFX_ASSERT(sizeof(T) == layout.size, "Layout size must match array type size. Found %zu and %zu", sizeof(T), layout.size);
     element_count = buffer.size();
-    return add_buffer(layout, buffer.get_raw());
+    return add_buffer(layout, buffer.get_handle());
 }
 
 template <typename T>

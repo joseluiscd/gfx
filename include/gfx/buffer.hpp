@@ -5,7 +5,10 @@
 
 namespace gfx {
 
-/// This raw buffer doesn't own the data
+/**
+* @brief GPU buffer handle. Does not own its data.
+* @note For an owning version, use `gfx::Buffer`.
+*/
 class BufferHandle {
 public:
     BufferHandle();
@@ -37,24 +40,39 @@ private:
     std::shared_ptr<Impl> impl;
 };
 
-/// This buffer owns the data
+/**
+* @brief Buffer that owns its data and handles GPU interoperability.
+* @note For a not-owning version of a GPU buffer, use `gfx::BufferHandle`.
+*
+* To obtain a RawBuffer handle, use the method `gfx::Buffer::get_handle()`.
+* @warni
+*/
 template <typename T>
 class Buffer {
 public:
     friend class Editor;
+
+    /**
+    * @brief Object that allows modifications on a gfx::Buffer and
+    * uploads modified data to the GPU on destruction.
+    */
     class Editor {
     public:
         friend class Buffer;
+
+        /// Mutable access to buffer elements.
         T& operator[](size_t i) {
             return buffer->data[i];
         }
 
+        /// Uploads modified data to the GPU.
         ~Editor()
         {
             buffer->update_buffer(dynamic);
             this->buffer = nullptr;
         }
 
+        /// Get a mutable reference to the underlying vector for edit.
         std::vector<T>& vector() {
             return buffer->data;
         }
@@ -89,8 +107,8 @@ public:
     ///Moves data
     void update_buffer(std::vector<T>&& data, bool dynamic = false);
 
-    BufferHandle& get_raw() { return raw_buffer; }
-    const BufferHandle& get_raw() const { return raw_buffer; }
+    BufferHandle& get_handle() { return raw_buffer; }
+    const BufferHandle& get_handle() const { return raw_buffer; }
 
     const T& operator[](size_t i) const
     {
@@ -102,6 +120,10 @@ public:
         return data.size();
     }
 
+    /**
+    * @brief Get a handle to an Edit object to edit the contents of the buffer.
+    * @return Object to modify the buffer and upload modified data to the GPU on destruction.
+    */
     Editor edit(bool dynamic = true) {
         Editor ed;
         ed.buffer = this;
