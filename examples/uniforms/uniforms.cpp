@@ -172,9 +172,11 @@ private:
 
 int main()
 {
-    gfx::Gfx app(gfx::InitOptions {
-        .title = "Hello world",
-        .resizable = true });
+    gfx::InitOptions options;
+    options.title = "Hello world";
+    options.resizable = false;
+
+    gfx::Gfx app(options);
 
     gfx::RenderPipeline pipeline = gfx::RenderPipeline::Builder("example")
                                        .with_shader(gfx::ShaderProgram::Builder("example")

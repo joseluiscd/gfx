@@ -1,6 +1,7 @@
 #include <gfx/glad.h>
 #include <gfx/log.hpp>
 #include <gfx/sampler.hpp>
+#include <array>
 
 namespace gfx {
 

@@ -9,6 +9,7 @@
 #include <memory>
 #include <optional>
 #include <vector>
+#include <array>
 
 #ifndef GFX_MAX_ATTRIBUTES
 #define GFX_MAX_ATTRIBUTES 16

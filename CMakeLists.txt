@@ -20,7 +20,7 @@ include(GNUInstallDirs)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(glfw3 3.3 REQUIRED)
-find_package(glm 0.9 REQUIRED)
+find_package(glm REQUIRED)
 find_package(Freetype 2.10)
 find_package(Doxygen)
 

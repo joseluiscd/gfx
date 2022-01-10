@@ -24,8 +24,8 @@
 
 namespace gfx {
 
-void glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity,
-    GLsizei length, const char* message, const void* userParam);
+void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
+    GLsizei length, const GLchar* message, const void* userParam);
 
 void setup_imgui_style();
 
@@ -90,7 +90,9 @@ Gfx::Gfx(const InitOptions& opts)
     : impl(new Gfx::Impl)
 {
     glfwSetErrorCallback(glfw_error_callback);
-    glfwInit();
+    if (!glfwInit()) {
+        GFX_ERROR("Unable to open GLFW window");
+    }
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -109,6 +111,8 @@ Gfx::Gfx(const InitOptions& opts)
         opts.title,
         nullptr,
         nullptr);
+
+    GFX_ASSERT(window, "Unable to create window");
 
     int width, height;
     glfwGetWindowSize(window, &width, &height);
@@ -222,10 +226,10 @@ glm::vec2 Gfx::get_mouse_position()
 
 void APIENTRY glDebugOutput(GLenum source,
     GLenum type,
-    unsigned int id,
+    GLuint id,
     GLenum severity,
     GLsizei length,
-    const char* message,
+    const GLchar* message,
     const void* userParam)
 {
     // ignore non-significant error/warning codes

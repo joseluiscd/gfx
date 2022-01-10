@@ -45,9 +45,11 @@ struct Vertex {
 
 int main()
 {
-    gfx::Gfx app(gfx::InitOptions {
-        .title = "Hello world",
-        .resizable = false });
+    gfx::InitOptions options;
+    options.title = "Hello world";
+    options.resizable = false;
+
+    gfx::Gfx app(options);
 
     std::vector<Vertex> vertices = {
         { glm::vec2(-0.5, -0.5), glm::vec3(1.0, 0.0, 0.0) },

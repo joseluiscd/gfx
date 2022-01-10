@@ -12,12 +12,14 @@
 
 int main()
 {
-    gfx::Gfx app(gfx::InitOptions {
-        .title = "ImGui Test",
-        .maximized = true,
-        .resizable = true,
-        .imgui = true,
-        .debug_context = true });
+    gfx::InitOptions options;
+        options.title = "ImGui Test";
+        options.maximized = true;
+        options.resizable = true;
+        options.imgui = true;
+        options.debug_context = true;
+
+    gfx::Gfx app(options);
 
     ImGui::FileBrowser browser;
 

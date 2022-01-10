@@ -8,27 +8,27 @@ namespace gfx {
 
 struct InitOptions {
     /// Window title
-    const char* title;
+    const char* title = "GFX App";
     /// Fullscreen window
-    bool fullscreen;
+    bool fullscreen = false;
 
     /// Maximized;
-    bool maximized;
+    bool maximized = false;
 
     /// Window width and height
-    int width, height;
+    int width = 0, height = 0;
 
     /// Enable window resize
-    bool resizable;
+    bool resizable = true;
 
     /// Enable ImGui
-    bool imgui;
+    bool imgui = false;
 
     /// Enable debug draw
-    bool debug_draw;
+    bool debug_draw = false;
 
     /// Enable debug context
-    bool debug_context;
+    bool debug_context = false;
 };
 
 class WindowRenderSurface : public RenderSurface {
