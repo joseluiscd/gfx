@@ -127,7 +127,7 @@ void Framebuffer::blit_colors(
         source0.x, source0.y,
         source1.x, source1.y,
         dest0.x, dest0.y,
-        dest1.x, dest0.y,
+        dest1.x, dest1.y,
         GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }
 

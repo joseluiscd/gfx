@@ -11,7 +11,7 @@ namespace gfx {
 
 class Framebuffer : public RenderSurface {
 public:
-    class Renderbuffer;
+    struct Renderbuffer;
 
     Framebuffer();
     Framebuffer(Framebuffer&& other);
