@@ -1,5 +1,6 @@
 #include <gfx/glad.h>
 #include <gfx/texture.hpp>
+#include <gfx/log.hpp>
 
 namespace gfx {
 
@@ -9,7 +10,7 @@ struct TextureHandle::Impl {
     GLuint id = 0;
     GLenum kind = GL_TEXTURE_2D;
     glm::ivec2 _size = { 0, 0 };
-    TextureType tex_type = TextureType::Rgb;
+    TextureFormat tex_format = TextureFormat::Rgb;
 };
 
 TextureHandle::Impl::~Impl()
@@ -17,51 +18,51 @@ TextureHandle::Impl::~Impl()
     glDeleteTextures(1, &id);
 }
 
-GLenum TextureType_get_GL_internal(TextureType t)
+GLenum TextureFormat_get_GL_internal(TextureFormat t)
 {
     switch (t) {
-    case TextureType::Rgb:
+    case TextureFormat::Rgb:
         return GL_RGB8;
-    case TextureType::Rgba:
+    case TextureFormat::Rgba:
         return GL_RGBA8;
-    case TextureType::Depth:
+    case TextureFormat::Depth:
         return GL_DEPTH_COMPONENT32F;
-    case TextureType::Bgr:
+    case TextureFormat::Bgr:
         return GL_RGB8;
-    case TextureType::Bgra:
+    case TextureFormat::Bgra:
         return GL_RGBA8;
     default:
         return 0;
     }
 }
 
-GLenum TextureType_get_GL(TextureType t)
+GLenum TextureFormat_get_GL(TextureFormat t)
 {
     switch (t) {
-    case TextureType::Rgb:
+    case TextureFormat::Rgb:
         return GL_RGB;
-    case TextureType::Rgba:
+    case TextureFormat::Rgba:
         return GL_RGBA;
-    case TextureType::Depth:
+    case TextureFormat::Depth:
         return GL_DEPTH_COMPONENT;
-    case TextureType::Bgr:
+    case TextureFormat::Bgr:
         return GL_BGR;
-    case TextureType::Bgra:
+    case TextureFormat::Bgra:
         return GL_BGRA;
     default:
         return 0;
     }
 }
 
-GLenum TextureType_get_GL_type(TextureType t)
+GLenum TextureFormat_get_GL_type(TextureFormat t)
 {
     switch (t) {
-    case TextureType::Rgb:
-    case TextureType::Rgba:
-    case TextureType::Bgr:
-    case TextureType::Bgra:
+    case TextureFormat::Rgb:
+    case TextureFormat::Rgba:
+    case TextureFormat::Bgr:
+    case TextureFormat::Bgra:
         return GL_UNSIGNED_BYTE;
-    case TextureType::Depth:
+    case TextureFormat::Depth:
         return GL_FLOAT;
     default:
         return 0;
@@ -119,17 +120,17 @@ bool TextureHandle::operator!=(const TextureHandle& other)
     return impl.get() != other.impl.get();
 }
 
-void TextureHandle::reserve_size(glm::ivec2 _size, unsigned levels, TextureType t)
+void TextureHandle::reserve_size(glm::ivec2 _size, unsigned levels, TextureFormat t)
 {
     impl->_size = _size;
-    impl->tex_type = t;
+    impl->tex_format = t;
 
     switch (impl->kind) {
     case GL_TEXTURE_2D:
-        glTextureStorage2D(impl->id, levels, TextureType_get_GL_internal(t), _size.x, _size.y);
+        glTextureStorage2D(impl->id, levels, TextureFormat_get_GL_internal(t), _size.x, _size.y);
         break;
     case GL_TEXTURE_2D_MULTISAMPLE:
-        glTextureStorage2DMultisample(impl->id, levels, TextureType_get_GL_internal(t), _size.x, _size.y, true);
+        glTextureStorage2DMultisample(impl->id, levels, TextureFormat_get_GL_internal(t), _size.x, _size.y, true);
         break;
     default:
         break;
@@ -141,8 +142,8 @@ void TextureHandle::upload_data(void* data, unsigned level)
     glTextureSubImage2D(
         impl->id, level,
         0, 0, impl->_size.x, impl->_size.y,
-        TextureType_get_GL(impl->tex_type),
-        TextureType_get_GL_type(impl->tex_type),
+        TextureFormat_get_GL(impl->tex_format),
+        TextureFormat_get_GL_type(impl->tex_format),
         data);
 }
 
@@ -170,6 +171,27 @@ TextureHandle TextureHandle::get_empty()
 {
     static TextureHandle empty = TextureHandle(new TextureHandle::Impl());
     return empty;
+}
+
+std::vector<uint8_t> TextureHandle::read_colors()
+{
+    GFX_ASSERT(impl->tex_format != TextureFormat::Depth);
+
+    size_t count = impl->_size.x * impl->_size.y;
+    switch (impl->tex_format) {
+    case TextureFormat::Bgr:
+    case TextureFormat::Rgb:
+        count *= 3;
+        break;
+    case TextureFormat::Bgra:
+    case TextureFormat::Rgba:
+        count *= 4;
+        break;
+    }
+       
+    std::vector<uint8_t> colors(count);
+    glGetTextureImage(impl->id, 0, TextureFormat_get_GL(impl->tex_format), GL_UNSIGNED_BYTE, colors.size(), colors.data());
+    return colors;
 }
 
 }

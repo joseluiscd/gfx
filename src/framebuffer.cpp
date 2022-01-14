@@ -17,14 +17,14 @@ struct Framebuffer::Impl {
 };
 
 struct Framebuffer::Renderbuffer {
-    Renderbuffer(const glm::ivec2& size, TextureType type, unsigned multisample = 0)
+    Renderbuffer(const glm::ivec2& size, TextureFormat type, unsigned multisample = 0)
     {
         glCreateRenderbuffers(1, &id);
         if (multisample == 0) {
-            glNamedRenderbufferStorage(id, TextureType_get_GL_internal(type), size.x, size.y);
+            glNamedRenderbufferStorage(id, TextureFormat_get_GL_internal(type), size.x, size.y);
         } else {
             glEnable(GL_MULTISAMPLE);
-            glNamedRenderbufferStorageMultisample(id, multisample, TextureType_get_GL_internal(type), size.x, size.y);
+            glNamedRenderbufferStorageMultisample(id, multisample, TextureFormat_get_GL_internal(type), size.x, size.y);
         }
     }
 
@@ -66,7 +66,7 @@ Framebuffer& Framebuffer::add_color_buffer(TextureHandle texture)
     return *this;
 }
 
-Framebuffer& Framebuffer::add_color_buffer(const glm::ivec2& size, TextureType t, unsigned multisample)
+Framebuffer& Framebuffer::add_color_buffer(const glm::ivec2& size, TextureFormat t, unsigned multisample)
 {
     Renderbuffer* rb = new Renderbuffer(size, t, multisample);
     glNamedFramebufferRenderbuffer(
@@ -96,7 +96,7 @@ Framebuffer& Framebuffer::set_depth_buffer(TextureHandle texture)
 
 Framebuffer& Framebuffer::set_depth_buffer(const glm::ivec2& size, unsigned multisample)
 {
-    Renderbuffer* rb = new Renderbuffer(size, TextureType::Depth, multisample);
+    Renderbuffer* rb = new Renderbuffer(size, TextureFormat::Depth, multisample);
     glNamedFramebufferRenderbuffer(
         impl->id,
         GL_DEPTH_ATTACHMENT,
@@ -146,5 +146,6 @@ void Framebuffer::blit_colors(
         dest1.x, dest1.y,
         GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }
+
 
 }

@@ -23,7 +23,7 @@ public:
     virtual void bind() override;
 
     Framebuffer& add_color_buffer(TextureHandle texture);
-    Framebuffer& add_color_buffer(const glm::ivec2& size, TextureType t = TextureType::Rgba, unsigned multisample = 0);
+    Framebuffer& add_color_buffer(const glm::ivec2& size, TextureFormat t = TextureFormat::Rgba, unsigned multisample = 0);
     Framebuffer& set_depth_buffer(TextureHandle texture);
     Framebuffer& set_depth_buffer(const glm::ivec2& size, unsigned multisample = 0);
 

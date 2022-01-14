@@ -2,12 +2,13 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 
 namespace gfx {
     
 using TextureUnit = unsigned int;
 
-enum class TextureType {
+enum class TextureFormat {
     Rgb,
     Rgba,
 
@@ -22,7 +23,7 @@ enum class TextureKind {
     Multisample
 };
 
-size_t TextureType_get_size(TextureType t);
+size_t TextureType_get_size(TextureFormat t);
 
 class TextureHandle {
 public:
@@ -42,9 +43,11 @@ public:
     size_t height() const;
     glm::ivec2 size() const;
 
-    void reserve_size(glm::ivec2 _size, unsigned mipmap_levels, TextureType type);
+    void reserve_size(glm::ivec2 _size, unsigned mipmap_levels, TextureFormat type);
     void upload_data(void* data, unsigned level);
     void build_mipmaps();
+
+    std::vector<uint8_t> read_colors();
 
     unsigned get_id() const;
     void bind() const;

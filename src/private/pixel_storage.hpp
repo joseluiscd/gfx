@@ -3,8 +3,8 @@
 
 namespace gfx {
 
-GLenum TextureType_get_GL_internal(TextureType t);
-GLenum TextureType_get_GL(TextureType t);
-GLenum TextureType_get_GL_type(TextureType t);
+GLenum TextureFormat_get_GL_internal(TextureFormat t);
+GLenum TextureFormat_get_GL(TextureFormat t);
+GLenum TextureFormat_get_GL_type(TextureFormat t);
 
 }
