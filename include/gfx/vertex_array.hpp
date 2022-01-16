@@ -70,14 +70,14 @@ public:
     void draw(); // override
 
 private:
+    struct Impl;
+    std::unique_ptr<Impl> impl;
+
     std::vector<Layout> layouts;
     std::vector<BufferHandle> buffers; // Just for keeping the handle around until the VAO is destroyed
     std::optional<BufferHandle> elements;
 
     size_t element_count;
-
-    struct Impl;
-    std::unique_ptr<Impl> impl;
 };
 
 #define GFX_VERTEX_LAYOUT(...) static constexpr const ::gfx::VertexArray::Layout __gfx_layout = { __VA_ARGS__ };
@@ -101,8 +101,8 @@ public:
 
     constexpr Layout(std::initializer_list<Entry> v)
         : entries()
-        , size(0)
         , count(v.size())
+        , size(0)
     {
         GFX_ASSERT(v.size() <= GFX_MAX_ATTRIBUTES,
             "Number of attributes in a layout cannot exceed %d (%zu supplied)."

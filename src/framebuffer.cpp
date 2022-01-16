@@ -39,10 +39,10 @@ struct Framebuffer::Renderbuffer {
 Framebuffer::Framebuffer()
     : impl(new Impl)
     , _size(0x7FFFFFFF, 0x7FFFFFFF)
-    , tex_depth_buffer()
     , tex_color_buffers()
-    , rb_depth_buffer(nullptr)
     , rb_color_buffers()
+    , tex_depth_buffer()
+    , rb_depth_buffer(nullptr)
 {
 }
 

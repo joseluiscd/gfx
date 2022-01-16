@@ -53,11 +53,11 @@ protected:
 class PerspectiveCameraLens : public CameraLens {
 public:
     PerspectiveCameraLens(float _fovy, float _aspect, float _znear, float _zfar)
-        : fovy(_fovy)
+        : CameraLens()
+        , fovy(_fovy)
         , aspect(_aspect)
         , znear(_znear)
         , zfar(_zfar)
-        , CameraLens()
     {
         update_matrix();
     }

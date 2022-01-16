@@ -175,7 +175,6 @@ TextureHandle TextureHandle::get_empty()
 
 std::vector<uint8_t> TextureHandle::read_colors()
 {
-    GFX_ASSERT(impl->tex_format != TextureFormat::Depth);
 
     size_t count = impl->_size.x * impl->_size.y;
     switch (impl->tex_format) {
@@ -187,6 +186,8 @@ std::vector<uint8_t> TextureHandle::read_colors()
     case TextureFormat::Rgba:
         count *= 4;
         break;
+    case TextureFormat::Depth:
+        GFX_ASSERT(impl->tex_format != TextureFormat::Depth, "Depth texture not supported");
     }
        
     std::vector<uint8_t> colors(count);

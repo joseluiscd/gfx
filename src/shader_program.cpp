@@ -12,7 +12,7 @@ inline void _validate_program(GLuint handle, const char* name);
 
 std::string read_shader_file(const char* path);
 
-struct ShaderProgram::Impl : public ShaderBinder {
+struct ShaderProgram::Impl final : public ShaderBinder {
     GLuint handle;
     std::vector<GLint> uniform_locations;
 

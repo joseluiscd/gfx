@@ -27,7 +27,7 @@ public:
 private:
     ShaderProgram();
 
-    class Impl;
+    struct Impl;
     std::unique_ptr<Impl> impl;
 };
 

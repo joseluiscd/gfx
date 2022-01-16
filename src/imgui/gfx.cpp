@@ -29,7 +29,6 @@ bool BeginFramebuffer(
     bool* open,
     ImGuiWindowFlags flags)
 {
-    bool ret = false;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
     if (! ImGui::Begin(window_title, open, flags)) {
         ImGui::PopStyleVar();
@@ -82,7 +81,6 @@ void BeginMainWindow(ImGuiWindowFlags flags)
     ImGui::PopStyleVar(3);
 
     ImGuiID dockspace_id = ImGui::GetID("Dockspace");
-    ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
     ImGui::DockSpace(dockspace_id);
 }
 
