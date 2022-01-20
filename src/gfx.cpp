@@ -125,7 +125,7 @@ Gfx::Gfx(const InitOptions& opts)
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    //glfwSwapInterval(1);
+    // glfwSwapInterval(1);
     GFX_INFO("Open GL version: %s", glGetString(GL_VERSION));
     GFX_INFO("GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
     GFX_INFO("Vendor: %s", glGetString(GL_VENDOR));
@@ -161,12 +161,14 @@ Gfx::Gfx(const InitOptions& opts)
 
 Gfx::~Gfx()
 {
-    if (impl->imgui_inited) {
-        ImGui_ImplOpenGL3_Shutdown();
-    }
+    if (impl) {
+        if (impl->imgui_inited) {
+            ImGui_ImplOpenGL3_Shutdown();
+        }
 
-    glfwDestroyWindow(impl->window);
-    glfwTerminate();
+        glfwDestroyWindow(impl->window);
+        glfwTerminate();
+    }
 }
 
 void Gfx::draw_gui(RenderSurface& rs)
@@ -311,7 +313,8 @@ void APIENTRY glDebugOutput(GLenum source,
 }
 
 #ifdef GFX_ENABLE_FONTAWESOME
-void add_fontawesome_icons() {
+void add_fontawesome_icons()
+{
     ImFontConfig cfg;
     ImGuiIO& io = ImGui::GetIO();
 

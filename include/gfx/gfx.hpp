@@ -53,6 +53,9 @@ public:
     Gfx(const InitOptions& opts);
     ~Gfx();
 
+    Gfx(Gfx&&) = delete;
+    Gfx& operator=(Gfx&&) = delete;
+
     /// Gets the render surface of the window.
     /// Lifetime of the returned pointer is the same as the `Gfx` object.
     RenderSurface& get_surface()
