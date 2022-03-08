@@ -83,7 +83,7 @@ void Gfx::Impl::keyboard_callback(GLFWwindow* w, int key, int scancode, int acti
 
 void glfw_error_callback(int error, const char* description)
 {
-    std::printf("GLFW ERROR: %d, %s", error, description);
+    GFX_ERROR("GLFW (code %d): %s", error, description);
 }
 
 Gfx::Gfx(const InitOptions& opts)
