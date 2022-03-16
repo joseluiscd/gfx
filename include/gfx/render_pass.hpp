@@ -172,6 +172,8 @@ public:
         const Iter& begin,
         const Iter& end,
         Function function);
+private:
+    RenderSurface* surface;
 };
 
 // Template Implementations
