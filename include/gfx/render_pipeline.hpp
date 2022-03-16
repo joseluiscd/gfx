@@ -24,7 +24,7 @@ public:
     }
 };
 
-class AbstractCamera {
+class AbstractCamera : public ICamera<AbstractCamera> {
 public:
     virtual void bind_camera() = 0;
     virtual glm::mat4 get_matrix() = 0;

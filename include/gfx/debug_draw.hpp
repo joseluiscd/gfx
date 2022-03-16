@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gfx/camera.hpp>
 #include <gfx/vertex_array.hpp>
 #include <glm/glm.hpp>
 
@@ -9,8 +10,13 @@ struct DebugPoint {
     glm::vec3 point;
     glm::vec3 color;
 
-    static const VertexArray::Layout layout;
+    GFX_VERTEX_LAYOUT(
+        gfx::attrib<glm::vec3>(0),
+        gfx::attrib<glm::vec3>(1))
 };
+
+class DebugDrawContext;
+std::shared_ptr<DebugDrawContext> create_debug_draw_context();
 
 class DebugDraw {
 public:
@@ -18,17 +24,17 @@ public:
     public:
         Builder()
         {
-            point_layers.push_back({0, 0});
-            line_layers.push_back({0, 0});
-            triangle_layers.push_back({0, 0});
+            point_layers.push_back({ 0, 0 });
+            line_layers.push_back({ 0, 0 });
+            triangle_layers.push_back({ 0, 0 });
         }
 
         void layer_next()
         {
             current_layer++;
-            point_layers.push_back({points.size(), points.size()});
-            line_layers.push_back({lines.size(), lines.size()});
-            triangle_layers.push_back({triangles.size(), triangles.size()});
+            point_layers.push_back({ points.size(), points.size() });
+            line_layers.push_back({ lines.size(), lines.size() });
+            triangle_layers.push_back({ triangles.size(), triangles.size() });
         }
 
         void set_color(const glm::vec3& color)
@@ -49,7 +55,7 @@ public:
 
         void circle(const glm::vec3& center, const glm::vec3& normal, float radius);
 
-        DebugDraw build();
+        DebugDraw build(const std::shared_ptr<DebugDrawContext>& ctx);
 
     private:
         unsigned int current_layer = 0;
@@ -73,7 +79,12 @@ public:
 
     static Builder init_file(const char* filename);
 
+    void do_render_pass(RenderSurface& surface, gfx::CameraRig& cam);
+
 private:
+    DebugDraw();
+
+    std::shared_ptr<DebugDrawContext> ctx;
     Buffer<DebugPoint> geometry;
     std::vector<Buffer<unsigned int>> indices;
 

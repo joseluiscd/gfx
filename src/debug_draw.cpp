@@ -1,15 +1,87 @@
 #define _USE_MATH_DEFINES
+#include <cmath>
+#include <gfx/camera.hpp>
 #include <gfx/debug_draw.hpp>
+#include <gfx/glad.h>
+#include <gfx/render_pass.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <cmath>
+
+const char* POINT_VS = R"(
+layout (location = 0) in vec3 v_position;
+layout (location = 1) in vec3 v_color;
+
+uniform mat4 mProj;
+uniform mat4 mModel;
+uniform mat4 mView;
+
+out vec4 i_color;
+
+void main()
+{
+    i_color = vec4(v_color, 1.0);
+    gl_Position = mProj * mView * mModel * vec4(v_position, 1.0);
+    gl_PointSize = 10.0;
+}
+)";
+
+const char* POINT_FS = R"(
+in vec4 i_color;
+
+out vec4 f_color;
+
+void main()
+{
+    f_color = i_color;
+}
+)";
 
 namespace gfx {
 
-const VertexArray::Layout DebugPoint::layout = {
-    gfx::attrib<glm::vec3>(1),
-    gfx::attrib<glm::vec3>(2)
+class DebugDrawContext {
+public:
+    DebugDrawContext();
+
+    RenderPipeline point_pipeline;
+    RenderPipeline line_pipeline;
+    RenderPipeline triangle_pipeline;
 };
+
+DebugDrawContext::DebugDrawContext()
+    : point_pipeline(RenderPipeline::Builder("Point debug pipeline")
+                         .with_shader(
+                             ShaderProgram::Builder("Point debug shader")
+                                 .register_class<CameraLens>("mProj")
+                                 .register_class<CameraRig>("mView")
+                                 .with_vertex_shader(POINT_VS)
+                                 .with_fragment_shader(POINT_FS)
+                                 .build())
+                         .build())
+    , line_pipeline(RenderPipeline::Builder("Line debug pipeline")
+                        .with_shader(
+                            ShaderProgram::Builder("Line debug shader")
+                                .register_class<CameraLens>("mProj")
+                                .register_class<CameraRig>("mView")
+                                .with_vertex_shader(POINT_VS)
+                                .with_fragment_shader(POINT_FS)
+                                .build())
+                        .build())
+    , triangle_pipeline(RenderPipeline::Builder("Triangle debug pipeline")
+                            .with_shader(
+                                ShaderProgram::Builder("Triangle debug shader")
+                                    .register_class<CameraLens>("mProj")
+                                    .register_class<CameraRig>("mView")
+                                    .with_vertex_shader(POINT_VS)
+                                    .with_fragment_shader(POINT_FS)
+                                    .build())
+                            .build())
+{
+}
+
+std::shared_ptr<DebugDrawContext> create_debug_draw_context()
+{
+    return std::make_shared<DebugDrawContext>();
+}
 
 void DebugDraw::Builder::point(const glm::vec3& p)
 {
@@ -101,9 +173,10 @@ void DebugDraw::Builder::circle(const glm::vec3& center, const glm::vec3& normal
     }
 }
 
-DebugDraw DebugDraw::Builder::build()
+DebugDraw DebugDraw::Builder::build(const std::shared_ptr<DebugDrawContext>& ctx)
 {
     DebugDraw dd;
+    dd.ctx = ctx;
 
     dd.geometry = Buffer<DebugPoint>(std::move(geometry));
     if (!points.empty()) {
@@ -111,7 +184,7 @@ DebugDraw DebugDraw::Builder::build()
         dd.indices.emplace_back(std::move(points));
 
         dd.points
-            .add_buffer(DebugPoint::layout, dd.geometry)
+            .add_buffer(dd.geometry)
             .set_indices_buffer(dd.indices.back())
             .set_mode(Mode::Points);
     }
@@ -121,7 +194,7 @@ DebugDraw DebugDraw::Builder::build()
         dd.indices.emplace_back(std::move(lines));
 
         dd.lines
-            .add_buffer(DebugPoint::layout, dd.geometry)
+            .add_buffer(dd.geometry)
             .set_indices_buffer(dd.indices.back())
             .set_mode(Mode::Lines);
     }
@@ -131,7 +204,7 @@ DebugDraw DebugDraw::Builder::build()
         dd.indices.emplace_back(std::move(triangles));
 
         dd.triangles
-            .add_buffer(DebugPoint::layout, dd.geometry)
+            .add_buffer(dd.geometry)
             .set_indices_buffer(dd.indices.back())
             .set_mode(Mode::Triangles);
     }
@@ -139,28 +212,37 @@ DebugDraw DebugDraw::Builder::build()
     return dd;
 }
 
+
+DebugDraw::DebugDraw()
+    : ctx(nullptr)
+    , geometry()
+    , indices()
+    , points()
+    , lines()
+    , triangles()
+    , point_layers()
+    , line_layers()
+    , triangle_layers()
+{
+    points.set_mode(Mode::Points);
+    lines.set_mode(Mode::Lines);
+    triangles.set_mode(Mode::Triangles);
 }
 
-const char* point_line_shader_source_vertex = "\n"
-                                              "layout (location=kPosition) in vec3 in_Position;\n"
-                                              "layout (location=kColor) in vec3 in_Color;\n"
-                                              "\n"
-                                              "out vec4 v_Color;\n"
-                                              "layout (location=kViewMatrix) uniform mat4 u_mvMatrix;\n"
-                                              "layout (location=kProjectionMatrix) uniform mat4 u_pMatrix;\n"
-                                              "\n"
-                                              "void main()\n"
-                                              "{\n"
-                                              "    mat4 u_MvpMatrix = u_pMatrix * u_mvMatrix;"
-                                              "    gl_Position  = u_MvpMatrix * vec4(in_Position, 1.0);\n"
-                                              "    v_Color      = vec4(in_Color, 1.0);\n"
-                                              "}\n";
+void DebugDraw::do_render_pass(RenderSurface& surface, gfx::CameraRig& cam)
+{
+    RenderPass(surface, ClearOperation::nothing())
+        .viewport_full()
+        .set_pipeline(ctx->point_pipeline)
+        .with_camera(cam)
+        .draw(points)
+        .set_pipeline(ctx->line_pipeline)
+        .with_camera(cam)
+        .draw(lines)
+        .set_pipeline(ctx->triangle_pipeline)
+        .with_camera(cam)
+        .draw(triangles)
+        .end_pipeline();
+}
 
-const char* point_line_shader_source_fragment = "\n"
-                                                "in  vec4 v_Color;\n"
-                                                "out vec4 out_FragColor;\n"
-                                                "\n"
-                                                "void main()\n"
-                                                "{\n"
-                                                "    out_FragColor = v_Color;\n"
-                                                "}\n";
+}
