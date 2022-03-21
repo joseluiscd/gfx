@@ -36,7 +36,7 @@ public:
         proj_matrix.bind(binder);
     }
 
-    glm::mat4 get_matrix() //override
+    glm::mat4 get_matrix() // override
     {
         return *proj_matrix;
     }
@@ -54,44 +54,61 @@ class PerspectiveCameraLens : public CameraLens {
 public:
     PerspectiveCameraLens(float _fovy, float _aspect, float _znear, float _zfar)
         : CameraLens()
-        , fovy(_fovy)
-        , aspect(_aspect)
-        , znear(_znear)
-        , zfar(_zfar)
+        , fields {
+            _fovy,
+            _aspect,
+            _znear,
+            _zfar
+        }
     {
         update_matrix();
     }
 
     void set_fovy(float _fovy)
     {
-        fovy = _fovy;
+        fields.fovy = _fovy;
         update_matrix();
     }
     void set_aspect(float _aspect)
     {
-        aspect = _aspect;
+        fields.aspect = _aspect;
         update_matrix();
     }
     void set_znear(float _znear)
     {
-        znear = _znear;
+        fields.znear = _znear;
         update_matrix();
     }
     void set_zfar(float _zfar)
     {
-        zfar = _zfar;
+        fields.zfar = _zfar;
         update_matrix();
     }
+
+    float get_znear() { return fields.znear; }
+    float set_znear() { return fields.znear; }
 
     void zoom(float zoom)
     {
-        fovy = glm::clamp(zoom * fovy, 0.0f, 180.0f);
+        fields.fovy = glm::clamp(zoom * fields.fovy, 0.0f, 180.0f);
         update_matrix();
     }
 
+    /// More efficient alternative to setters when setting more than one variable (Updates matrix only once)
+    template <typename F>
+    inline void edit_fields(F f)
+    {
+        f(fields);
+        update_matrix();
+    }
+
+    struct Fields {
+        float fovy, aspect, znear, zfar;
+    };
+
 private:
     void update_matrix();
-    float fovy, aspect, znear, zfar;
+    Fields fields;
 };
 
 class CameraRig : public ICamera<CameraRig> {
@@ -135,13 +152,13 @@ public:
     }
 
     /// Binds this camera rig and the lens
-    void bind(ShaderBinder& binder) //override
+    void bind(ShaderBinder& binder) // override
     {
         _lens->bind(binder);
         view_matrix.bind(binder);
     }
 
-    glm::mat4 get_matrix() //override
+    glm::mat4 get_matrix() // override
     {
         return _lens->get_matrix() * (*view_matrix);
     }
@@ -151,7 +168,7 @@ public:
         builder.register_uniform<ViewMatrix>(location);
     }
 
-    //Movement
+    // Movement
     void pan(float angle);
     void tilt(float angle);
     void dolly(float distance);

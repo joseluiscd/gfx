@@ -7,7 +7,7 @@ namespace gfx {
 
 void PerspectiveCameraLens::update_matrix()
 {
-    *proj_matrix = glm::perspective(fovy, aspect, znear, zfar);
+    *proj_matrix = glm::perspective(fields.fovy, fields.aspect, fields.znear, fields.zfar);
 }
 
 void CameraRig::update_matrix()
