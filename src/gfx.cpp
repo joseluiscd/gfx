@@ -34,6 +34,7 @@ struct Gfx::Impl {
 
     bool debug_draw_inited = false;
     bool imgui_inited = false;
+    bool autoclear = false;
 
     std::optional<KeyboardCallback> keyboard_cb = {};
     std::optional<MouseMoveCallback> mousemove_cb = {};
@@ -157,6 +158,8 @@ Gfx::Gfx(const InitOptions& opts)
         glDebugMessageCallback(glDebugOutput, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
+
+    impl->autoclear = opts.autoclear;
 }
 
 Gfx::~Gfx()
@@ -192,6 +195,8 @@ void Gfx::step(std::function<void()> render_frame)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
+
+    if (impl->autoclear) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     render_frame();
 

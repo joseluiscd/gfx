@@ -29,6 +29,9 @@ struct InitOptions {
 
     /// Enable debug context
     bool debug_context = false;
+
+    /// Clear screen on every frame
+    bool autoclear = false;
 };
 
 class WindowRenderSurface : public RenderSurface {
