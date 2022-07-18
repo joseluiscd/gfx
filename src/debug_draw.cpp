@@ -12,7 +12,6 @@ layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_color;
 
 uniform mat4 mProj;
-uniform mat4 mModel;
 uniform mat4 mView;
 
 out vec4 i_color;
@@ -20,7 +19,7 @@ out vec4 i_color;
 void main()
 {
     i_color = vec4(v_color, 1.0);
-    gl_Position = mProj * mView * mModel * vec4(v_position, 1.0);
+    gl_Position = mProj * mView * vec4(v_position, 1.0);
     gl_PointSize = 10.0;
 }
 )";
@@ -178,10 +177,10 @@ DebugDraw DebugDraw::Builder::build(const std::shared_ptr<DebugDrawContext>& ctx
     DebugDraw dd;
     dd.ctx = ctx;
 
-    dd.geometry = Buffer<DebugPoint>(std::move(geometry));
+    dd.geometry = Buffer<DebugPoint>(geometry);
     if (!points.empty()) {
         size_t i = dd.indices.size();
-        dd.indices.emplace_back(std::move(points));
+        dd.indices.emplace_back(points);
 
         dd.points
             .add_buffer(dd.geometry)
@@ -191,7 +190,7 @@ DebugDraw DebugDraw::Builder::build(const std::shared_ptr<DebugDrawContext>& ctx
 
     if (!lines.empty()) {
         size_t i = dd.indices.size();
-        dd.indices.emplace_back(std::move(lines));
+        dd.indices.emplace_back(lines);
 
         dd.lines
             .add_buffer(dd.geometry)
@@ -201,7 +200,7 @@ DebugDraw DebugDraw::Builder::build(const std::shared_ptr<DebugDrawContext>& ctx
 
     if (!triangles.empty()) {
         size_t i = dd.indices.size();
-        dd.indices.emplace_back(std::move(triangles));
+        dd.indices.emplace_back(triangles);
 
         dd.triangles
             .add_buffer(dd.geometry)
