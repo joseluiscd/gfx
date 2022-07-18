@@ -47,10 +47,7 @@ void CameraRig::dolly(float distance)
 
 void CameraRig::truck(float distance)
 {
-    glm::mat4 transform = glm::translate(distance * u);
-    v_lookat = glm::vec3(transform * glm::vec4(v_lookat, 1.0));
-    this->v_position = glm::vec3(transform * glm::vec4(this->v_position, 1.0));
-    update_matrix();
+    horizontal(distance);
 }
 
 void CameraRig::crane(float distance)
@@ -64,6 +61,14 @@ void CameraRig::crane(float distance)
 void CameraRig::vertical(float distance)
 {
     glm::mat4 transform = glm::translate(distance * v);
+    v_lookat = glm::vec3(transform * glm::vec4(v_lookat, 1.0));
+    this->v_position = glm::vec3(transform * glm::vec4(this->v_position, 1.0));
+    update_matrix();
+}
+
+void CameraRig::horizontal(float distance)
+{
+    glm::mat4 transform = glm::translate(distance * u);
     v_lookat = glm::vec3(transform * glm::vec4(v_lookat, 1.0));
     this->v_position = glm::vec3(transform * glm::vec4(this->v_position, 1.0));
     update_matrix();

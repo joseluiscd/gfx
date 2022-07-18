@@ -117,12 +117,18 @@ public:
         using type = glm::mat4;
     };
 
-    CameraRig(CameraLens& __lens)
+    CameraRig(
+        CameraLens& __lens,
+        const glm::vec3 position = { 0.0f, 0.0f, 1.0f },
+        const glm::vec3 lookat = { 0.0f, 0.0f, 0.0f },
+        const glm::vec3 up = { 0.0f, 1.0f, 0.0f })
+
         : _lens(&__lens)
-        , v_position(0.0, 0.0, 1.0)
-        , v_lookat(0.0, 0.0, 0.0)
-        , v_up(0.0, 1.0, 0.0)
+        , v_position(position)
+        , v_lookat(lookat)
+        , v_up(up)
     {
+        update_matrix();
     }
 
     CameraRig(const CameraRig& other) = default;
@@ -172,9 +178,11 @@ public:
     void pan(float angle);
     void tilt(float angle);
     void dolly(float distance);
+    [[deprecated("Use CameraRig::horizontal")]]
     void truck(float distance);
     void crane(float distance);
     void vertical(float distance);
+    void horizontal(float distance);
     void advance(float distance);
     void orbit(float angle);
     void orbit_vertical(float angle);
