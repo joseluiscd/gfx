@@ -161,6 +161,14 @@ Buffer<T>::Buffer(std::vector<T>&& _data, bool dynamic)
 }
 
 template <typename T>
+Buffer<T>::Buffer(const std::vector<T>& _data, bool dynamic)
+    : data(_data)
+    , raw_buffer()
+{
+    this->update_buffer(dynamic);
+}
+
+template <typename T>
 void Buffer<T>::update_buffer(T* buffer, size_t count, bool dynamic)
 {
     this->data = std::move(std::vector<T>(buffer, buffer+count));
